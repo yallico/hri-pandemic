@@ -1,10 +1,10 @@
-2025-02-14 15:41:23 UTC
+2025-02-14 15:53:02 UTC
 Linux-6.8.9-100.fc38.x86_64-x86_64-with-glibc2.37
 Ren'Py 8.3.4.24120703
 
-Early init took 0.07s
+Early init took 0.06s
 Loading error handling took 0.04s
-Loading script took 0.17s
+Loading script took 0.32s
 Loading save slot metadata took 0.03s
 Loading persistent took 0.00s
 Running init code took 0.05s
@@ -23,7 +23,7 @@ Cleaning stores took 0.00s
 Init translation took 0.04s
 Build styles took 0.00s
 Load screen analysis took 0.00s
-Analyze screens took 0.02s
+Analyze screens took 0.01s
 Save screen analysis took 0.02s
 Prepare screens took 0.09s
 Save pyanalysis. took 0.02s
@@ -46,7 +46,7 @@ Maximum texture size: 4096x4096
 Cleaning stores took 0.00s
 Init translation took 0.00s
 Build styles took 0.00s
-Load screen analysis took 0.04s
+Load screen analysis took 0.03s
 Analyze screens took 0.00s
 Prepare screens took 0.00s
 Running _start took 0.00s
