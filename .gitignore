@@ -3,6 +3,23 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Ignore Ren'Py cache and compiled files
+*.rpyc
+*.rpyb
+*.pyo
+*.pyc
+*.swp
+*.save
+# Ignore save files and persistent data
+game/saves/
+config.version
+errors.txt
+
+# Ignore Ren'Py cache directory
+cache/
+renpy.log
+thumbs.db
+
 # C extensions
 *.so
 

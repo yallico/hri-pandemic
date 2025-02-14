@@ -3,31 +3,136 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
+define player = Character("World Controller")
 
+# Game Variables
 
-# The game starts here.
+default health = 100
+default economy = 100
+default public_order = 100
+default turn = 1
 
+# Scenes
+image bg world_map = "images/world_map.jpg"
+
+# Start of the Game
 label start:
+    scene bg world_map with fade
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    player "A new virus has emerged. You have 6 turns to control the outbreak."
 
-    scene bg room
+    jump turn_1  # Start the first turn
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+# Turn 1 - Initial Response
+label turn_1:
+    scene bg crisis_meeting with fade
+    player "We must act quickly. What should we do first?"
+    
+    menu:
+        "Lock down major cities (Protects health, damages economy)":
+            $ health += 10
+            $ economy -= 15
+            jump turn_2
 
-    show eileen happy
+        "Delay action to monitor (Helps economy, risks health)":
+            $ health -= 10
+            $ economy += 10
+            jump turn_2
 
-    # These display lines of dialogue.
+# Turn 2 - Vaccine Research
+label turn_2:
+    scene bg lab with fade
+    player "Scientists need funding for a vaccine."
 
-    e "You've created a new Ren'Py game."
+    menu:
+        "Invest heavily (Speeds vaccine, hurts economy)":
+            $ health += 15
+            $ economy -= 20
+            jump turn_3
 
-    e "Once you add a story, pictures, and music, you can release it to the world!"
+        "Rely on natural immunity (Risky but saves money)":
+            $ health -= 20
+            $ economy += 10
+            jump turn_3
 
-    # This ends the game.
+# Turn 3 - Social Order
+label turn_3:
+    scene bg protests with fade
+    player "People are protesting against restrictions."
 
-    return
+    menu:
+        "Enforce lockdowns (Prevents spread, damages public order)":
+            $ health += 10
+            $ public_order -= 20
+            jump turn_4
+
+        "Ease restrictions (Restores order, risks infections)":
+            $ health -= 10
+            $ public_order += 10
+            jump turn_4
+
+# Turn 4 - Mutation Discovery
+label turn_4:
+    scene bg lab_alert with fade
+    player "The virus has mutated! We need more research."
+
+    menu:
+        "Divert funds to mutation research (Saves lives, hurts economy)":
+            $ health += 15
+            $ economy -= 15
+            jump turn_5
+
+        "Ignore mutation, focus on reopening (Boosts economy, risks spread)":
+            $ health -= 15
+            $ economy += 15
+            jump turn_5
+
+# Turn 5 - Vaccine Rollout
+label turn_5:
+    scene bg vaccination with fade
+    player "The vaccine is ready. How should we distribute it?"
+
+    menu:
+        "Free for all (Best for health, damages economy)":
+            $ health += 20
+            $ economy -= 25
+            jump turn_6
+
+        "Charge for vaccines (Helps economy, worsens public trust)":
+            $ economy += 15
+            $ public_order -= 10
+            jump turn_6
+
+# Turn 6 - Final Decision
+label turn_6:
+    scene bg press_conference with fade
+    player "The world is watching. What is our final message?"
+
+    menu:
+        "Declare victory (Risky, but calms the public)":
+            $ public_order += 15
+            jump ending
+
+        "Be cautious (People may panic, but honest)":
+            $ public_order -= 10
+            jump ending
+
+# Determine Ending
+label ending:
+    scene bg world_map with fade
+    
+    if health > 80 and economy > 50 and public_order > 50:
+        player "We successfully controlled the pandemic! The world is healing."
+        return
+    elif health < 50:
+        player "Millions died due to our lack of action. We failed."
+        return
+    elif economy < 30:
+        player "The economy collapsed. Even with good health, people suffer."
+        return
+    elif public_order < 30:
+        player "Civil unrest has broken out. Governments are falling apart."
+        return
+    else:
+        player "We did our best, but the world remains divided."
+        return
