@@ -15,8 +15,21 @@ default turn = 1
 # Scenes
 image bg world_map = "images/world_map.jpg"
 
+#Stats
+init python:
+    def update_stat_labels():
+        global health_text, economy_text, public_order_text
+        health_text = f"🏥 Health: {health}/100"
+        economy_text = f"💰 Economy: {economy}/100"
+        public_order_text = f"⚖ Public Order: {public_order}/100"
+
+# init -1 python:
+#     update_stat_labels()
+
 # Start of the Game
 label start:
+    $ update_stat_labels()
+    show screen stats_overlay
     scene bg world_map with fade
 
     player "A new virus has emerged. You have 6 turns to control the outbreak."
@@ -32,11 +45,13 @@ label turn_1:
         "Lock down major cities (Protects health, damages economy)":
             $ health += 10
             $ economy -= 15
+            $ update_stat_labels()
             jump turn_2
 
         "Delay action to monitor (Helps economy, risks health)":
             $ health -= 10
             $ economy += 10
+            $ update_stat_labels()
             jump turn_2
 
 # Turn 2 - Vaccine Research
@@ -48,11 +63,13 @@ label turn_2:
         "Invest heavily (Speeds vaccine, hurts economy)":
             $ health += 15
             $ economy -= 20
+            $ update_stat_labels()
             jump turn_3
 
         "Rely on natural immunity (Risky but saves money)":
             $ health -= 20
             $ economy += 10
+            $ update_stat_labels()
             jump turn_3
 
 # Turn 3 - Social Order
@@ -64,11 +81,13 @@ label turn_3:
         "Enforce lockdowns (Prevents spread, damages public order)":
             $ health += 10
             $ public_order -= 20
+            $ update_stat_labels()
             jump turn_4
 
         "Ease restrictions (Restores order, risks infections)":
             $ health -= 10
             $ public_order += 10
+            $ update_stat_labels()
             jump turn_4
 
 # Turn 4 - Mutation Discovery
@@ -80,11 +99,13 @@ label turn_4:
         "Divert funds to mutation research (Saves lives, hurts economy)":
             $ health += 15
             $ economy -= 15
+            $ update_stat_labels()
             jump turn_5
 
         "Ignore mutation, focus on reopening (Boosts economy, risks spread)":
             $ health -= 15
             $ economy += 15
+            $ update_stat_labels()
             jump turn_5
 
 # Turn 5 - Vaccine Rollout
@@ -96,11 +117,13 @@ label turn_5:
         "Free for all (Best for health, damages economy)":
             $ health += 20
             $ economy -= 25
+            $ update_stat_labels()
             jump turn_6
 
         "Charge for vaccines (Helps economy, worsens public trust)":
             $ economy += 15
             $ public_order -= 10
+            $ update_stat_labels()
             jump turn_6
 
 # Turn 6 - Final Decision
@@ -111,10 +134,12 @@ label turn_6:
     menu:
         "Declare victory (Risky, but calms the public)":
             $ public_order += 15
+            $ update_stat_labels()
             jump ending
 
         "Be cautious (People may panic, but honest)":
             $ public_order -= 10
+            $ update_stat_labels()
             jump ending
 
 # Determine Ending

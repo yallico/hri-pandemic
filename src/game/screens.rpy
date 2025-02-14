@@ -1499,6 +1499,31 @@ define bubble.expand_area = {
     "thought" : (0, 0, 0, 0),
 }
 
+################################################################################
+## Stats Overlay
+################################################################################
+
+screen stats_overlay():
+    zorder 100  #on top of other elements
+
+    #top-right corner
+    frame:
+        xalign 1.0  # Align right
+        yalign 0.0  # Align top
+        background "#222222CC"  # Semi-transparent dark background
+        padding (20, 20, 20, 20)
+
+        vbox:
+            spacing 5  # Adds spacing between stats
+
+            label "[health_text]" text_size 22
+            bar value health range 100 xmaximum 200 style "health_bar"
+
+            label "[economy_text]" text_size 22
+            bar value economy range 100 xmaximum 200 style "economy_bar"
+
+            label "[public_order_text]" text_size 22
+            bar value public_order range 100 xmaximum 200 style "order_bar"
 
 
 ################################################################################

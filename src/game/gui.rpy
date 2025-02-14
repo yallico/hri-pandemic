@@ -331,6 +331,24 @@ define gui.vslider_borders = Borders(6, 6, 6, 6)
 ## while None shows them.
 define gui.unscrollable = "hide"
 
+## Health Bar (Default Green)
+style health_bar is bar
+style health_bar:
+    left_bar "#26a026"  # Light green
+    right_bar "#555555"  # Dark gray background
+
+## Economy Bar (Gold)
+style economy_bar is bar
+style economy_bar:
+    left_bar "#FFD700"  # Gold
+    right_bar "#555555"  # Dark gray background
+
+## Public Order Bar (Silver)
+style order_bar is bar
+style order_bar:
+    left_bar "#C0C0C0"  # Silver
+    right_bar "#555555"  # Dark gray background
+
 
 ## History #####################################################################
 ##
