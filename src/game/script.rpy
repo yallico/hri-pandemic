@@ -4,6 +4,7 @@
 # name of the character.
 
 define player = Character("World Controller")
+define nao = Character("Advisor NAO", color="#2d7a8c")
 
 # Game Variables
 
@@ -14,6 +15,7 @@ default turn = 1
 
 # Scenes
 image bg world_map = "images/world_map.jpg"
+image bg control_room = "images/control_room.jpg"
 
 #Stats
 init python:
@@ -32,27 +34,31 @@ label start:
     show screen stats_overlay
     scene bg world_map with fade
 
-    player "A new virus has emerged. You have 6 turns to control the outbreak."
+    nao "A new virus threatens the World! We have 6 turns to control the outbreak."
 
     jump turn_1  # Start the first turn
 
 # Turn 1 - Initial Response
 label turn_1:
-    scene bg crisis_meeting with fade
-    player "We must act quickly. What should we do first?"
+    scene bg control_room with fade
+    nao "We must act quickly. What should we do first?"
     
-    menu:
-        "Lock down major cities (Protects health, damages economy)":
-            $ health += 10
-            $ economy -= 15
-            $ update_stat_labels()
-            jump turn_2
+    call screen advisor_menu("TEST", [
+            ("Lock down major cities (Protects health, damages economy)", "lockdown"),
+            ("Delay action to monitor (Helps economy, risks health)", "monitor")
+    ])
 
-        "Delay action to monitor (Helps economy, risks health)":
-            $ health -= 10
-            $ economy += 10
-            $ update_stat_labels()
-            jump turn_2
+    if _return == "lockdown":
+        $ health += 10
+        $ economy -= 15
+        $ update_stat_labels()
+        jump turn_2
+
+    elif _return == "monitor":
+        $ health -= 10
+        $ economy += 10
+        $ update_stat_labels()
+        jump turn_2
 
 # Turn 2 - Vaccine Research
 label turn_2:

@@ -349,6 +349,20 @@ style order_bar:
     left_bar "#C0C0C0"  # Silver
     right_bar "#555555"  # Dark gray background
 
+## Menu buttons ################################################################
+
+style advisor_menu_button is button:
+    size_group "menu_buttons"
+    xsize 800 
+    ysize 200  
+    background "#FFFFFF"
+    hover_background "#000000"
+    padding (15, 15)
+    size 24
+    color "#000000"
+    hover_color "#FFD700"
+
+
 
 ## History #####################################################################
 ##

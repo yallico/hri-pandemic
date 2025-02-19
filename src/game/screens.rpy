@@ -1525,6 +1525,33 @@ screen stats_overlay():
             label "[public_order_text]" text_size 22
             bar value public_order range 100 xmaximum 200 style "order_bar"
 
+################################################################################
+## Advisor Menu
+################################################################################
+
+screen advisor_menu(title, choices):
+    modal True
+    zorder 100
+
+    hbox:
+        yalign 0.5
+        xalign 0.5
+        spacing 40
+
+        frame:
+            background "#FFFFFF"
+            padding (5, 5) #border thickness
+            add "advisor_nao" size (674, 674) yalign 0.5 
+
+        vbox:
+            yalign 0.5
+            spacing 15
+            text title size 30 xalign 0.5 color "#FFFFFF"
+
+            for text, return_value in choices:
+                textbutton text action Return(return_value) style "advisor_menu_button"
+
+
 
 ################################################################################
 ## Mobile Variants

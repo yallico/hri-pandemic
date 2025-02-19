@@ -1,10 +1,10 @@
-2025-02-14 15:53:02 UTC
+2025-02-19 09:58:25 UTC
 Linux-6.8.9-100.fc38.x86_64-x86_64-with-glibc2.37
 Ren'Py 8.3.4.24120703
 
 Early init took 0.06s
 Loading error handling took 0.04s
-Loading script took 0.32s
+Loading script took 0.27s
 Loading save slot metadata took 0.03s
 Loading persistent took 0.00s
 Running init code took 0.05s
@@ -20,10 +20,10 @@ Initial gc took 0.04s
 DPI scale factor: 1.000000
 Creating interface object took 0.00s
 Cleaning stores took 0.00s
-Init translation took 0.04s
+Init translation took 0.05s
 Build styles took 0.00s
 Load screen analysis took 0.00s
-Analyze screens took 0.01s
+Analyze screens took 0.02s
 Save screen analysis took 0.02s
 Prepare screens took 0.09s
 Save pyanalysis. took 0.02s
@@ -43,10 +43,3 @@ Screen sizes: virtual=(1920, 1080) physical=(1739, 978) drawable=(1739, 978)
 Maximum texture size: 4096x4096
 Screen sizes: virtual=(1920, 1080) physical=(1920, 1011) drawable=(1920, 1011)
 Maximum texture size: 4096x4096
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.00s
-Load screen analysis took 0.03s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
