@@ -16,6 +16,7 @@ default turn = 1
 # Scenes
 image bg world_map = "images/world_map.jpg"
 image bg control_room = "images/control_room.jpg"
+image bg lab = "images/lab_room.jpg"
 
 #Stats
 init python:
@@ -25,8 +26,8 @@ init python:
         economy_text = f"💰 Economy: {economy}/100"
         public_order_text = f"⚖ Public Order: {public_order}/100"
 
-# init -1 python:
-#     update_stat_labels()
+#Log Data
+default player_choices = []
 
 # Start of the Game
 label start:
@@ -52,24 +53,27 @@ label turn_1:
         $ health += 10
         $ economy -= 15
         $ update_stat_labels()
+        $ player_choices.append("A")
         jump turn_2
 
     elif _return == "monitor":
         $ health -= 10
         $ economy += 10
         $ update_stat_labels()
+        $ player_choices.append("B")
         jump turn_2
 
 # Turn 2 - Vaccine Research
 label turn_2:
     scene bg lab with fade
-    player "Scientists need funding for a vaccine."
+    nao "Scientists need funding for a vaccine."
 
     menu:
         "Invest heavily (Speeds vaccine, hurts economy)":
             $ health += 15
             $ economy -= 20
             $ update_stat_labels()
+            $ player_choices.append("A")
             jump turn_3
 
         "Rely on natural immunity (Risky but saves money)":
@@ -154,16 +158,28 @@ label ending:
     
     if health > 80 and economy > 50 and public_order > 50:
         player "We successfully controlled the pandemic! The world is healing."
-        return
+        jump show_choices
     elif health < 50:
         player "Millions died due to our lack of action. We failed."
-        return
+        jump show_choices
     elif economy < 30:
         player "The economy collapsed. Even with good health, people suffer."
-        return
+        jump show_choices
     elif public_order < 30:
         player "Civil unrest has broken out. Governments are falling apart."
-        return
+        jump show_choices
     else:
         player "We did our best, but the world remains divided."
-        return
+        jump show_choices
+
+label show_choices:
+    if player_choices:
+        player "Please save your progress before the game ends."
+        $ renpy.call_screen("save")
+        call screen choice_log()
+        player "Game saved successfully saved"
+    else:
+        player "Error loading log data."
+    
+    return
+

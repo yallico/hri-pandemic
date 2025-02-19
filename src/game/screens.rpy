@@ -352,11 +352,17 @@ screen main_menu():
     ## This ensures that any other menu screen is replaced.
     tag menu
 
-    add gui.main_menu_background
+    add "images/title_screen.jpg"
 
     ## This empty frame darkens the main menu.
     frame:
         style "main_menu_frame"
+
+    text "NAO PANDEMIC":
+        size 160
+        color "#d9ff00"
+        xalign 0.8
+        yalign 0.8
 
     ## The use statement includes another screen inside this one. The actual
     ## contents of the main menu are in the navigation screen.
@@ -1551,6 +1557,30 @@ screen advisor_menu(title, choices):
             for text, return_value in choices:
                 textbutton text action Return(return_value) style "advisor_menu_button"
 
+################################################################################
+## Logs
+################################################################################
+
+screen choice_log():
+    modal True
+    zorder 100
+
+    frame:
+        xfill True
+        yfill True
+        background "#222222DD"  # Semi-transparent background
+        padding (20, 20)
+
+        vbox:
+            spacing 10
+            align (0.5, 0.5)
+
+            text "Player Decisions Log" size 30 color "#FFFFFF" xalign 0.5
+
+            for choice in player_choices:
+                text "• [choice]" size 24 color "#FFD700"  # Gold color
+
+            textbutton "Close" action Return() xalign 0.5
 
 
 ################################################################################
