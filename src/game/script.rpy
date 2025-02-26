@@ -39,13 +39,13 @@ label start:
 
     jump turn_1  # Start the first turn
 
-# Turn 1 - Initial Response
+# Turn 1 - Initial Response TO NOVEL VIRUS
 label turn_1:
     scene bg control_room with fade
     nao "We must act quickly. What should we do first?"
     
-    call screen advisor_menu("TEST", [
-            ("Lock down major cities (Protects health, damages economy)", "lockdown"),
+    call screen advisor_menu("CHOOSE ONE", [
+            ("Close borders and lock down major cities (Protects health, damages public order)", "lockdown"),
             ("Delay action to monitor (Helps economy, risks health)", "monitor")
     ])
 
@@ -63,29 +63,29 @@ label turn_1:
         $ player_choices.append("B")
         jump turn_2
 
-# Turn 2 - Vaccine Research
+# Turn 2 - Healthcare Under Strain & Public Reaction
 label turn_2:
     scene bg lab with fade
-    nao "Scientists need funding for a vaccine."
+    nao "Despite our efforts, the healthcare system is under strain. What should we do next?"
 
     menu:
-        "Invest heavily (Speeds vaccine, hurts economy)":
+        "Fund emergency hospitals, make preventative measures voluntary (Damages economy)":
             $ health += 15
             $ economy -= 20
             $ update_stat_labels()
             $ player_choices.append("A")
             jump turn_3
 
-        "Rely on natural immunity (Risky but saves money)":
+        "Enforce preventative measures and crack down on dissidents (Helps public order)":
             $ health -= 20
             $ economy += 10
             $ update_stat_labels()
             jump turn_3
 
-# Turn 3 - Social Order
+# Turn 3 - Mutation Discovery & Vaccine Research
 label turn_3:
     scene bg protests with fade
-    player "People are protesting against restrictions."
+    player "Though we were doing well, the virus has mutated and is spreading faster. What should we do now?"
 
     menu:
         "Enforce lockdowns (Prevents spread, damages public order)":
@@ -100,10 +100,10 @@ label turn_3:
             $ update_stat_labels()
             jump turn_4
 
-# Turn 4 - Mutation Discovery
+# Turn 4 - Social Unrest & Civil Tensions
 label turn_4:
     scene bg lab_alert with fade
-    player "The virus has mutated! We need more research."
+    player "Death rates keep increasing and social unrest has begun to spread. Thousands ask for your resignation due to the handling of the pandemic. What should we do?"
 
     menu:
         "Divert funds to mutation research (Saves lives, hurts economy)":
@@ -121,25 +121,25 @@ label turn_4:
 # Turn 5 - Vaccine Rollout
 label turn_5:
     scene bg vaccination with fade
-    player "The vaccine is ready. How should we distribute it?"
+    player "We have developed a vaccine! How should we distribute it?"
 
     menu:
-        "Free for all (Best for health, damages economy)":
+        "Distribute to most vulnerable first (Best for health, damages economy)":
             $ health += 20
             $ economy -= 25
             $ update_stat_labels()
             jump turn_6
 
-        "Charge for vaccines (Helps economy, worsens public trust)":
+        "Prioritise the working population (Helps economy, worsens public order)":
             $ economy += 15
             $ public_order -= 10
             $ update_stat_labels()
             jump turn_6
 
-# Turn 6 - Final Decision
+# Turn 6 - The coup d'tat
 label turn_6:
     scene bg press_conference with fade
-    player "The world is watching. What is our final message?"
+    nao "The world is watching. What is our final message?"
 
     menu:
         "Declare victory (Risky, but calms the public)":
