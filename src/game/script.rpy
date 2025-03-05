@@ -60,7 +60,7 @@ init python:
     def send_to_chatgpt(prompt):
         """Sends a request to ChatGPT API and returns structured response."""
 
-        key = "" 
+        key = "sk-5c149c0b9b5b4183af2b3ef417b11d58" 
         
         url = "https://api.deepseek.com/chat/completions"
         headers = {
