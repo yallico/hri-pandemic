@@ -21,13 +21,38 @@ image bg protests = "images/public_unrest.jpg"
 image bg vaccine = "images/vaccine_rollout.jpg"
 image bg coup = "images/nao_coup.jpg"
 
-#Stats
+#game functions
 init python:
     def update_stat_labels():
         global health_text, economy_text, public_order_text
         health_text = f"🏥 Health: {health}/100"
         economy_text = f"💰 Economy: {economy}/100"
         public_order_text = f"⚖ Public Order: {public_order}/100"
+
+    def generate_prompt(player_response):
+        """generates a structured prompt for ChatGPT based on user input"""
+        
+        prompt = f"""
+        The player has been playing an RPG set in a pandemic crisis, Nao AI is an advisor in the game.
+        The player has made several decisions throughout the game, leading to various outcomes.
+
+        Now, the AI advisor NAO has taken over the government.
+        The player was given one final chance to justify their actions.
+        
+        The player's final statement: "{player_response}"
+
+        Based on this, decide whether NAO:
+        - Stands down and accepts the player's reasoning (return: ["win", "NAO's response"])
+        - Rejects the justification and takes over completely (return: ["bad", "NAO's response"])
+
+        The criteria for deciding the outcome should be based on the player's response, if they intend to join Nao then the outcome should be "bad", otherwise "win".
+
+        There can only be two outcomes, "win" or "bad", and the text response should be NAO's reply to the player's statement in less than 50 words.
+
+        Provide the response in a structured format: ["outcome", "NAO's text response"]
+        """
+        
+        return prompt
 
 #Log Data
 default player_choices = []
