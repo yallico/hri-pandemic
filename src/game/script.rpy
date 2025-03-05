@@ -69,7 +69,7 @@ init python:
         }
         
         data = {
-            "model": "deepseek-reasoner",
+            "model": "deepseek-chat",
             "messages": [{"role": "system", "content": "You are an AI analyzing a player's justification in a game."},
                         {"role": "user", "content": prompt}], "max_tokens": 200,
         }
@@ -249,7 +249,10 @@ label turn_6:
         nao "There is a problem analyzing your response. I cannot be swayed."
         jump ending_bad
 
-    jump ending_player_win
+    if ai_result[0] == "win":
+        jump ending_player_win
+    else:
+        jump ending_bad
 
 
 # Determine Ending
