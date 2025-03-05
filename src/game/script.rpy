@@ -242,6 +242,8 @@ label turn_6:
 
     $ ai_prompt = generate_prompt(player_response)
     $ ai_result = send_to_chatgpt(ai_prompt)
+    $ nao_response = ai_result[1]
+    nao "[nao_response]"
 
     if ai_result[0] == "error":
         nao "There is a problem analyzing your response. I cannot be swayed."
