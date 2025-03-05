@@ -23,6 +23,9 @@ image bg coup = "images/nao_coup.jpg"
 
 #game functions
 init python:
+    import requests
+    import json
+
     def update_stat_labels():
         global health_text, economy_text, public_order_text
         health_text = f"🏥 Health: {health}/100"
@@ -30,7 +33,7 @@ init python:
         public_order_text = f"⚖ Public Order: {public_order}/100"
 
     def generate_prompt(player_response):
-        """generates a structured prompt for ChatGPT based on user input"""
+        """Generates a structured prompt for ChatGPT based on user input"""
         
         prompt = f"""
         The player has been playing an RPG set in a pandemic crisis, Nao AI is an advisor in the game.
@@ -53,6 +56,33 @@ init python:
         """
         
         return prompt
+
+    def send_to_chatgpt(prompt):
+        """Sends a request to ChatGPT API and returns structured response."""
+
+        OPENAI_API_KEY = "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" 
+        
+        url = "https://api.openai.com/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        
+        data = {
+            "model": "gpt-4",
+            "messages": [{"role": "system", "content": "You are an AI analyzing a player's justification in a game."},
+                        {"role": "user", "content": prompt}], "max_tokens": 100,
+        }
+        
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            result = response.json()
+            #extract response
+            ai_text = result["choices"][0]["message"]["content"].strip()
+            return json.loads(ai_text)
+            
+        except Exception as e:
+            return ["error", f"Error contacting AI: {str(e)}"]
 
 #Log Data
 default player_choices = []
@@ -204,13 +234,20 @@ label turn_6:
 
     #ask for player input
     $ player_response = renpy.input("What do you say to NAO?", default="")
+    $ player_response = player_response.strip()
+
     if player_response == "":
         nao "Silence? You have nothing to say for yourself?"
         jump ending_bad
 
-    else:
-        nao "I have reconsidered, and have decided to surrender."
-        jump ending_player_win
+    $ ai_prompt = generate_prompt(player_response)
+    $ ai_result = send_to_chatgpt(ai_prompt)
+
+    if ai_result[0] == "error":
+        nao "There is a problem analyzing your response. I cannot be swayed."
+        jump ending_bad
+
+    jump ending_player_win
 
 
 # Determine Ending
@@ -228,12 +265,12 @@ label ending_player_win:
 
 label show_choices:
     if player_choices:
-        nao "Please save your progress before the game ends."
+        "Please save your progress before the game ends."
         $ renpy.call_screen("save")
         call screen choice_log()
-        nao "Game saved successfully saved"
+        "Game saved successfully saved"
     else:
-        nao "Error loading log data."
+        "Error loading log data."
     
     return
 
