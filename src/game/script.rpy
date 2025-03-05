@@ -60,18 +60,18 @@ init python:
     def send_to_chatgpt(prompt):
         """Sends a request to ChatGPT API and returns structured response."""
 
-        OPENAI_API_KEY = "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" 
+        key = "" 
         
-        url = "https://api.openai.com/v1/chat/completions"
+        url = "https://api.deepseek.com/chat/completions"
         headers = {
-            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Authorization": f"Bearer {key}",
             "Content-Type": "application/json"
         }
         
         data = {
-            "model": "gpt-4",
+            "model": "deepseek-reasoner",
             "messages": [{"role": "system", "content": "You are an AI analyzing a player's justification in a game."},
-                        {"role": "user", "content": prompt}], "max_tokens": 100,
+                        {"role": "user", "content": prompt}], "max_tokens": 200,
         }
         
         try:
