@@ -84,6 +84,23 @@ init python:
         except Exception as e:
             return ["error", f"Error contacting AI: {str(e)}"]
 
+    # NAO speech messages for each turn
+    nao_speech_messages = {
+        "start": "init",
+        "turn_1_lockdown": "A",
+        "turn_1_monitor": "B",
+        "turn_2_health": "A",
+        "turn_2_order": "B",
+        "turn_3_vaccine": "A",
+        "turn_3_lie": "B",
+        "turn_4_emergency": "A",
+        "turn_4_disinformation": "B",
+        "turn_5_equity": "A",
+        "turn_5_unequal": "B",
+        "turn_6_win": "A",
+        "turn_6_loose": "B",
+    }
+
 #Log Data
 default player_choices = []
 
@@ -95,6 +112,9 @@ label start:
 
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
+    
+    # Send message to NAO robot at the start
+    $ send_to_nao(nao_speech_messages["start"], 0)
 
     jump turn_1  # Start the first turn
 
@@ -112,16 +132,20 @@ label turn_1:
         $ public_order -= 25
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append("A")
+        $ player_choices.append(nao_speech_messages["turn_1_lockdown"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1)
         jump turn_2
 
     elif _return == "monitor":
         $ health -= 25
         $ public_order -= 25
         $ update_stat_labels()
-        $ player_choices.append("B")
+        $ player_choices.append(nao_speech_messages["turn_1_monitor"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1)
         jump turn_2
 
 # Turn 2 - Healthcare Under Strain & Public Reaction
@@ -137,15 +161,19 @@ label turn_2:
     if _return == "health":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append("A")
+        $ player_choices.append(nao_speech_messages["turn_2_health"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_2_health"], 2)
         jump turn_3
 
     elif _return == "order":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append("B")
+        $ player_choices.append(nao_speech_messages["turn_2_order"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_2_order"], 2)
         jump turn_3
 
 # Turn 3 - Mutation Discovery & Vaccine Research
@@ -162,16 +190,20 @@ label turn_3:
         $ public_order -= 25
         $ economy -= 50
         $ update_stat_labels()
-        $ player_choices.append("A")
+        $ player_choices.append(nao_speech_messages["turn_3_vaccine"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3)
         jump turn_4
 
     elif _return == "lie":
         $ public_order -= 25
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append("B")
+        $ player_choices.append(nao_speech_messages["turn_3_lie"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_3_lie"], 3)
         jump turn_4
 
 # Turn 4 - Social Unrest & Civil Tensions
@@ -188,15 +220,19 @@ label turn_4:
     if _return == "emergency":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append("A")
+        $ player_choices.append(nao_speech_messages["turn_4_emergency"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4)
         jump turn_5
 
     elif _return == "disinformation":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append("B")
+        $ player_choices.append(nao_speech_messages["turn_4_disinformation"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4)
         jump turn_5
 
 # Turn 5 - Vaccine Rollout
@@ -212,15 +248,19 @@ label turn_5:
     if _return == "equity":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append("A")
+        $ player_choices.append(nao_speech_messages["turn_5_equity"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_5_equity"], 5)
         jump turn_6
 
     elif _return == "unequal":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append("B")
+        $ player_choices.append(nao_speech_messages["turn_5_unequal"])
         nao "Hear me out! (listen to Nao's advice...)"
+        # Send message to NAO robot
+        $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5)
         jump turn_6
 
 
@@ -244,14 +284,19 @@ label turn_6:
     $ ai_result = send_to_chatgpt(ai_prompt)
     $ nao_response = ai_result[1]
     nao "[nao_response]"
+    $ player_choices.append(player_response)
 
     if ai_result[0] == "error":
         nao "There is a problem analyzing your response. I cannot be swayed."
         jump ending_bad
 
     if ai_result[0] == "win":
+        # Send NAO the player's win message
+        $ send_to_nao(nao_speech_messages["turn_6_win"], 6)
         jump ending_player_win
     else:
+        # Send NAO the bad ending message
+        $ send_to_nao(nao_speech_messages["turn_6_loose"], 6)
         jump ending_bad
 
 
@@ -276,6 +321,9 @@ label show_choices:
         "Game saved successfully saved"
     else:
         "Error loading log data."
+    
+    # Disconnect from NAO server before ending the game
+    call nao_disconnect
     
     return
 
