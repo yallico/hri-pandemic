@@ -113,14 +113,9 @@ label start:
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     
-    python:
-        try:
-            renpy.log("DEBUG: THIS IS A TEST")
-            send_to_nao(nao_speech_messages["start"], 0)
-        except:
-            renpy.say(nao, "Unable reach the NAO server, please check your connection.")
+    $ send_to_nao(nao_speech_messages["start"], 0)
 
-    jump turn_1  # Start the first turn
+    jump turn_1 
 
 # Turn 1 - Initial Response TO NOVEL VIRUS
 label turn_1:
