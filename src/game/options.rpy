@@ -145,6 +145,11 @@ default preferences.afm_time = 15
 
 define config.save_directory = "src-1739541400"
 
+## Debugging ##############################################################
+##
+
+define config.clear_log = True
+define config.log = "game-log.txt"
 
 ## Icon ########################################################################
 ##

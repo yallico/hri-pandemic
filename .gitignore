@@ -15,7 +15,8 @@ __pycache__/
 game/saves/
 config.version
 errors.txt
-
+game-log.txt
+log.txt
 # Ignore Ren'Py cache directory
 cache/
 renpy.log

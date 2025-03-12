@@ -97,8 +97,8 @@ init python:
         "turn_4_disinformation": "B",
         "turn_5_equity": "A",
         "turn_5_unequal": "B",
-        "turn_6_win": "A",
-        "turn_6_loose": "B",
+        "turn_6_win": "W",
+        "turn_6_loose": "L",
     }
 
 #Log Data
@@ -113,8 +113,12 @@ label start:
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     
-    # Send message to NAO robot at the start
-    $ send_to_nao(nao_speech_messages["start"], 0)
+    python:
+        try:
+            renpy.log("DEBUG: THIS IS A TEST")
+            send_to_nao(nao_speech_messages["start"], 0)
+        except:
+            renpy.say(nao, "Unable reach the NAO server, please check your connection.")
 
     jump turn_1  # Start the first turn
 
