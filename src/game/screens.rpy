@@ -1558,6 +1558,28 @@ screen advisor_menu(title, choices):
                 textbutton text action Return(return_value) style "advisor_menu_button"
 
 ################################################################################
+## SECS
+################################################################################
+
+screen secs_questionnaire(qtext, storevar):
+    modal True
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (10, 10)
+        has vbox
+
+        text "How positive or negative do you feel about each issue on the scale of 0 to 100?\n(where 0 represents very negative, and 100 represents very positive?)" size 32 color "#FFFFFF"
+        xalign 0.5
+        spacing 10
+        
+        text qtext size 32 color "#4839b9"
+
+        input value VariableInputValue(storevar) allow "0123456789" length 3
+
+        textbutton "Next" action Return() sensitive (getattr(store, storevar) != "")
+
+################################################################################
 ## Logs
 ################################################################################
 

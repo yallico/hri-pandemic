@@ -5,6 +5,20 @@
 
 define nao = Character("Advisor NAO", color="#2d7a8c")
 
+# Variables to store each pre-game questionnaire answers
+default secs_q1 = ""
+default secs_q2 = ""
+default secs_q3 = ""
+default secs_q4 = ""
+default secs_q5 = ""
+default secs_q6 = ""
+default secs_q7 = ""
+default secs_q8 = ""
+default secs_q9 = ""
+default secs_q10 = ""
+default secs_q11 = ""
+default secs_q12 = ""
+
 # Game Variables
 
 default health = 100
@@ -101,25 +115,49 @@ init python:
         "turn_6_loose": "L",
     }
 
+    # List of SECS questions
+    secs_questions = [
+        { "text": "Abortion", "var": "secs_q1" },
+        { "text": "Welfare benefits", "var": "secs_q2" },
+        { "text": "Limited government", "var": "secs_q3" },
+        { "text": "Military and national security", "var": "secs_q4" },
+        { "text": "Religion", "var": "secs_q5" },
+        { "text": "Gun ownership", "var": "secs_q6" },
+        { "text": "Traditional marriage", "var": "secs_q7" },
+        { "text": "Traditional values", "var": "secs_q8" },
+        { "text": "Fiscal responsibility", "var": "secs_q9" },
+        { "text": "Business", "var": "secs_q10" },
+        { "text": "The family unit", "var": "secs_q11" },
+        { "text": "Patriotism", "var": "secs_q12" }
+    ]
+
 #Log Data
 default player_choices = []
 
 # Start of the Game
 label start:
     $ update_stat_labels()
-    show screen stats_overlay
     scene bg world_map with fade
 
+    $ send_to_nao(nao_speech_messages["start"], 0)
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
-    
-    $ send_to_nao(nao_speech_messages["start"], 0)
+    nao "Before we start, let me ask you a few questions to understand your leadership style."
+
+    python:
+        for q in secs_questions:
+            renpy.call_screen("secs_questionnaire", q["text"], q["var"])
+            player_choices.append(getattr(store, q["var"]))
+
+    nao "Understood. Calibrating parameters for AI advice..."
+    #TODO: we need a function that takes results from SECs and configures NAO advice accordingly
 
     jump turn_1 
 
 # Turn 1 - Initial Response TO NOVEL VIRUS
 label turn_1:
     scene bg control_room with fade
+    show screen stats_overlay
     nao "We need to act quickly. What should we do first?"
     
     call screen advisor_menu("CHOOSE ONE", [

@@ -1,34 +1,60 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
-While running game code:
-  File "game/script.rpy", line 183, in script
-    $ renpy.save(persistent.last_save_slot)
-  File "game/script.rpy", line 183, in <module>
-    $ renpy.save(persistent.last_save_slot)
-TypeError: unsupported operand type(s) for +: 'int' and 'str'
+After initialization, but before game start.
+  File "game/screens.rpy", line 1564, in prepare_screen
+    screen secs_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1564, in prepare
+    screen secs_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1566, in prepare
+    frame:
+  File "game/screens.rpy", line 1566, in prepare
+    frame:
+  File "game/screens.rpy", line 1570, in prepare
+    has vbox
+  File "game/screens.rpy", line 1570, in prepare
+    has vbox
+  File "game/screens.rpy", line 1572, in prepare
+    text "How positive or negative do you feel about each issue on the scale of 0 to 100?\n
+SyntaxError: EOL while scanning string literal (screens.rpy, line 1572)
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 183, in script
-    $ renpy.save(persistent.last_save_slot)
-  File "/home/yallicol/renpy-sdk/renpy/ast.py", line 827, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1178, in py_exec_bytecode
-    exec(bytecode, globals, locals)
-  File "game/script.rpy", line 183, in <module>
-    $ renpy.save(persistent.last_save_slot)
-  File "/home/yallicol/renpy-sdk/renpy/loadsave.py", line 460, in save
-    location.save(slotname, sr)
-  File "/home/yallicol/renpy-sdk/renpy/savelocation.py", line 517, in save
-    l.save(slotname, record)
-  File "/home/yallicol/renpy-sdk/renpy/savelocation.py", line 208, in save
-    filename = self.filename(slotname)
-  File "/home/yallicol/renpy-sdk/renpy/savelocation.py", line 146, in filename
-    return os.path.join(self.directory, renpy.exports.fsencode(slotname + renpy.savegame_suffix))
-TypeError: unsupported operand type(s) for +: 'int' and 'str'
+  File "/home/yallicol/renpy-sdk/renpy/bootstrap.py", line 359, in bootstrap
+    renpy.main.main()
+  File "/home/yallicol/renpy-sdk/renpy/main.py", line 652, in main
+    run(restart)
+  File "/home/yallicol/renpy-sdk/renpy/main.py", line 94, in run
+    renpy.display.screen.prepare_screens()
+  File "/home/yallicol/renpy-sdk/renpy/display/screen.py", line 1024, in prepare_screens
+    s.ast.prepare_screen()
+  File "game/screens.rpy", line 1564, in prepare_screen
+    screen secs_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1564, in prepare
+    screen secs_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1566, in prepare
+    frame:
+  File "game/screens.rpy", line 1566, in prepare
+    frame:
+  File "game/screens.rpy", line 1570, in prepare
+    has vbox
+  File "game/screens.rpy", line 1570, in prepare
+    has vbox
+  File "game/screens.rpy", line 1572, in prepare
+    text "How positive or negative do you feel about each issue on the scale of 0 to 100?\n
+  File "/home/yallicol/renpy-sdk/renpy/py3analysis.py", line 803, in ast_eval
+    return self.ast_eval_literal(expr)[0]
+  File "/home/yallicol/renpy-sdk/renpy/py3analysis.py", line 785, in ast_eval_literal
+    expr = py_compile(expr, 'eval', ast_node=True)
+  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1144, in py_compile
+    raise e
+  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1081, in py_compile
+    raise orig_e
+  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1073, in py_compile
+    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+SyntaxError: EOL while scanning string literal (screens.rpy, line 1572)
 
 Linux-6.8.9-100.fc38.x86_64-x86_64-with-glibc2.37 x86_64
 Ren'Py 8.3.4.24120703
 src 1.0
-Wed Feb 19 11:35:23 2025
+Wed Mar 12 14:07:45 2025
