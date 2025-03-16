@@ -39,6 +39,10 @@ image bg coup = "images/nao_coup.jpg"
 init python:
     import requests
     import json
+    import robotcontrol  # Import our robot control module
+
+    # Initialize robot server at the start
+    robot_server = None
 
     def update_stat_labels():
         global health_text, economy_text, public_order_text
@@ -103,14 +107,14 @@ init python:
         "start": "init",
         "turn_1_lockdown": "A",
         "turn_1_monitor": "B",
-        "turn_2_health": "A",
-        "turn_2_order": "B",
-        "turn_3_vaccine": "A",
-        "turn_3_lie": "B",
-        "turn_4_emergency": "A",
-        "turn_4_disinformation": "B",
-        "turn_5_equity": "A",
-        "turn_5_unequal": "B",
+        "turn_2_health": "turn_2_health",
+        "turn_2_order": "turn_2_order",
+        "turn_3_vaccine": "turn_3_vaccine",
+        "turn_3_lie": "turn_3_lie",
+        "turn_4_emergency": "turn_4_emergency",
+        "turn_4_disinformation": "turn_4_disinformation",
+        "turn_5_equity": "turn_5_equity",
+        "turn_5_unequal": "turn_5_unequal",
         "turn_6_win": "W",
         "turn_6_loose": "L",
     }
@@ -130,6 +134,16 @@ init python:
         { "text": "The family unit", "var": "secs_q11" },
         { "text": "Patriotism", "var": "secs_q12" }
     ]
+
+    # Function to send message to NAO robot
+    def send_to_nao(message_key, turn):
+        """Send message to NAO robot based on the message key and turn number"""
+        robotcontrol.send_to_nao(message_key, turn)
+    
+    # Function to disconnect from NAO robot
+    def nao_disconnect():
+        """Disconnect from NAO robot server"""
+        robotcontrol.disconnect_nao()
 
 #Log Data
 default player_choices = []
@@ -363,4 +377,9 @@ label show_choices:
     call nao_disconnect
     
     return
+
+# # Label to properly disconnect from NAO
+# label nao_disconnect:
+#     $ nao_disconnect()
+#     return
 
