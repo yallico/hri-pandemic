@@ -1,4 +1,4 @@
-# NAO Robot Integration with Renpy Pandemic Game
+# Synthetic Counsel: Robot Influence on Decision-Making in Simulated Governance
 
 This project enables a NAO/Pepper robot to interact with a Renpy-based pandemic simulation game. The robot serves as an advisor, providing verbal feedback with expressive arm gestures.
 
