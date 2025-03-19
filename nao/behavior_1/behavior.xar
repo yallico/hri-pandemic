@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.ald.softbankrobotics.com/schema/choregraphe/project.xsd" xar_version="3">
+  <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+    <bitmap>media/images/box/root.png</bitmap>
+    <script language="4">
+      <content>
+        <![CDATA[]]>
+      </content>
+    </script>
+    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+    <Timeline enable="0">
+      <BehaviorLayer name="behavior_layer1">
+        <BehaviorKeyframe name="keyframe1" index="1">
+          <Diagram>
+            <Box name="Python Script" id="1" localization="8" tooltip="This box contains a basic python script and can be used to create any python script box you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="305" y="332">
+              <bitmap>media/images/box/box-python-script.png</bitmap>
+              <script language="4">
+                <content>
+                  <![CDATA[import socket
+import time
+import qi
+import almath
+import threading
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        self.client_socket = None
+        self.connection_active = False
+        self.listening_thread = None
+        self.session = None
+        self.memory = None
+        self.motion = None
+        self.posture = None
+        self.tts = None
+        self.animation = None
+
+    def onLoad(self):
+        # Initialize the NAOqi session and modules
+        self.session = qi.Session()
+        try:
+            self.session.connect("tcp://127.0.0.1:54373")  # Change to robot IP when not in simulation
+            self.memory = self.session.service("ALMemory")
+            self.motion = self.session.service("ALMotion")
+            self.posture = self.session.service("ALRobotPosture")
+            self.tts = self.session.service("ALTextToSpeech")
+            # 验证TTS是否正常
+            self.tts.say(" ")  # 尝试一个空字符串，测试连接
+            self.animation = self.session.service("ALAnimationPlayer")
+            self.logger.info("Successfully connected to NAOqi services")
+        except Exception as e:
+            self.logger.error("Could not connect to NAOqi services: {}".format(e))
+
+    def connect_to_server(self):
+        # Connection parameters
+        host = '127.0.0.1'  # Localhost, change to server IP if needed
+        port = 8888         # Make sure this matches the renpy server port
+
+        try:
+            # Create a socket connection
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client_socket.connect((host, port))
+            self.connection_active = True
+            self.logger.info("Connected to renpy server at {}:{}".format(host, port))
+            return True
+        except Exception as e:
+            self.logger.error("Failed to connect to server: {}".format(e))
+            return False
+
+    def listen_for_messages(self):
+        while self.connection_active:
+            try:
+                # Receive data from the server
+                data = self.client_socket.recv(1024).decode('utf-8')
+                if not data:
+                    self.logger.info("Connection closed by server")
+                    self.connection_active = False
+                    break
+
+                self.logger.info("Received command: {}".format(data))
+
+                # Process the received command
+                self.process_command(data)
+
+            except socket.timeout:
+                # Socket timeout is not an error, just continue
+                continue
+            except Exception as e:
+                self.logger.error("Error receiving data: {}".format(e))
+                self.connection_active = False
+                break
+
+    def process_command(self, command):
+        """Process commands received from renpy server"""
+        try:
+            # Parse command - you can customize this based on your renpy server's message format
+            # Simple example: command might be "say:Hello" or "gesture:wave"
+            parts = command.strip().split(':')
+
+            if len(parts) >= 2:
+                action = parts[0].lower()
+                param = ':'.join(parts[1:])  # Join back in case there were colons in the parameter
+
+                # Perform actions based on command
+                if action == "say":
+                    self.robot_say(param)
+                elif action == "gesture":
+                    self.robot_gesture(param)
+                elif action == "posture":
+                    self.robot_posture(param)
+                elif action == "move":
+                    # Format for move should be: move:x,y,theta
+                    # Example: move:0.5,0.0,0.0 (move forward 0.5m)
+                    move_params = param.split(',')
+                    if len(move_params) == 3:
+                        try:
+                            x = float(move_params[0])
+                            y = float(move_params[1])
+                            theta = float(move_params[2])
+                            self.robot_move(x, y, theta)
+                        except ValueError:
+                            self.logger.error("Invalid move parameters: {}".format(param))
+                else:
+                    self.logger.warning("Unknown command type: {}".format(action))
+            else:
+                self.logger.warning("Malformed command: {}".format(command))
+
+        except Exception as e:
+            self.logger.error("Error processing command: {}".format(e))
+
+    def raise_arm(self):
+        """Raise the right arm in a gesture while speaking"""
+        try:
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses("RArm", 1.0)
+
+                # Define the arm positions (right shoulder pitch, right shoulder roll, right elbow yaw, right elbow roll, right wrist yaw)
+                # These angles create a raised arm gesture
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+
+                # Angles for raised arm position (in radians)
+                # Shoulder pitch: lower values lift the arm upward
+                # Shoulder roll: negative values move arm outward
+                # Elbow roll: controls the bending of the elbow
+                angles = [0.5, -0.2, 1.0, 0.5]  # Raised arm position
+
+                # Set arm to raised position with a smooth motion
+                self.motion.setAngles(names, angles, 0.2)  # 0.2 is the speed
+
+                self.logger.info("Arm raised for speaking gesture")
+                return True
+            else:
+                self.logger.warning("Motion service not available, can't raise arm")
+                return False
+        except Exception as e:
+            self.logger.error("Error raising arm: {}".format(e))
+            return False
+
+    def lower_arm(self):
+        """Return the arm to neutral position"""
+        try:
+            if self.motion:
+                # Return to a neutral position, can also use goToPosture for full body
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                angles = [1.4, 0.1, 1.5, 0.3]  # More neutral position
+                self.motion.setAngles(names, angles, 0.2)
+
+                self.logger.info("Arm returned to neutral position")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error lowering arm: {}".format(e))
+            return False
+
+    def robot_say(self, text):
+        """Make the robot speak while raising its arm"""
+        try:
+            # Check if TTS service is available
+            if not self.tts:
+                try:
+                    self.tts = self.session.service("ALTextToSpeech")
+                except Exception as e:
+                    self.logger.error("Failed to reconnect to TTS service: {}".format(e))
+                    return
+
+            # Raise arm as a gesture while speaking
+            arm_raised = self.raise_arm()
+
+            # Speak the text
+            self.tts.say(text)
+            self.logger.info("Robot said: {}".format(text))
+
+            # Lower arm after speaking
+            if arm_raised:
+                time.sleep(0.5)  # Small delay to ensure speech is complete
+                self.lower_arm()
+
+        except Exception as e:
+            self.logger.error("Error in robot_say: {}".format(e))
+
+    def robot_gesture(self, gesture_name):
+        """Execute a gesture/animation on the robot"""
+        try:
+            if self.animation:
+                if self.animation.hasAnimation(gesture_name):
+                    self.animation.run(gesture_name)
+                    self.logger.info("Robot performed gesture: {}".format(gesture_name))
+                else:
+                    self.logger.warning("Unknown gesture: {}".format(gesture_name))
+        except Exception as e:
+            self.logger.error("Error in robot_gesture: {}".format(e))
+
+    def robot_posture(self, posture_name):
+        """Set robot to a specific posture"""
+        try:
+            if self.posture:
+                self.posture.goToPosture(posture_name, 0.8)  # speed = 0.8
+                self.logger.info("Robot went to posture: {}".format(posture_name))
+        except Exception as e:
+            self.logger.error("Error in robot_posture: {}".format(e))
+
+    def robot_move(self, x, y, theta):
+        """Move the robot relative to its current position"""
+        try:
+            if self.motion:
+                self.motion.moveTo(x, y, theta)
+                self.logger.info("Robot moved: x={}, y={}, theta={}".format(x, y, theta))
+        except Exception as e:
+            self.logger.error("Error in robot_move: {}".format(e))
+
+    def onInput_onStart(self):
+        # Connect to server
+        if self.connect_to_server():
+            # Set socket timeout to enable cleaner shutdown
+            self.client_socket.settimeout(1.0)
+
+            # Start listening for messages in a separate thread
+            self.listening_thread = threading.Thread(target=self.listen_for_messages)
+            self.listening_thread.daemon = True
+            self.listening_thread.start()
+
+            # Notify server that we're ready
+            try:
+                self.client_socket.sendall("robot_ready".encode('utf-8'))
+            except Exception as e:
+                self.logger.error("Failed to send ready message: {}".format(e))
+        else:
+            # Connection failed, stop the behavior
+            self.onStopped("Connection failed")
+
+    def onInput_onStop(self):
+        # Clean shutdown of the connection
+        self.connection_active = False
+
+        if self.client_socket:
+            try:
+                self.client_socket.sendall("disconnecting".encode('utf-8'))
+                time.sleep(0.5)  # Give some time for the message to be sent
+                self.client_socket.close()
+            except:
+                pass  # Ignore errors during shutdown
+
+        self.onUnload()
+        self.onStopped("Stopped")
+
+    def onUnload(self):
+        # Ensure socket is closed and thread is terminated
+        self.connection_active = False
+
+        if self.client_socket:
+            try:
+                self.client_socket.close()
+            except:
+                pass
+            self.client_socket = None
+
+        # Wait for listening thread to finish if it's running
+        if self.listening_thread and self.listening_thread.is_alive():
+            self.listening_thread.join(timeout=1.0)]]>
+                </content>
+              </script>
+              <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+              <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+              <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+              <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+            </Box>
+            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+            <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+          </Diagram>
+        </BehaviorKeyframe>
+      </BehaviorLayer>
+    </Timeline>
+  </Box>
+</ChoregrapheProject>
