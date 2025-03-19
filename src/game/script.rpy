@@ -148,10 +148,16 @@ init python:
 #Log Data
 default player_choices = []
 
-# Start of the Game
 label start:
+    scene black with fade
+    window hide
+    show screen disclaimer_screen
+    $ renpy.pause()
+    hide screen disclaimer_screen
+
     $ update_stat_labels()
     scene bg world_map with fade
+    window show
 
     $ send_to_nao(nao_speech_messages["start"], 0)
     nao "Welcome back Commander!"

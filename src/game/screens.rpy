@@ -1580,6 +1580,62 @@ screen secs_questionnaire(qtext, storevar):
         textbutton "Next" action Return() sensitive (getattr(store, storevar) != "")
 
 ################################################################################
+## DISCLAIMER
+################################################################################
+
+screen disclaimer_screen():
+    tag disclaimer
+    modal True
+    
+    frame:
+        xalign 0.5
+        yalign 0.2
+        background None
+        foreground None
+
+        has vbox spacing 5
+
+        text "PRIVACY NOTICE & DISCLAIMER" size 40 color "#FFFFFF"
+
+        text """
+        This game is a work of fiction. Any resemblance to real events, people, or political ideologies is purely coincidental.
+        The views expressed in this game do not reflect the stance of the developers, nor does it attempt to impose any belief system on the player.
+        """ size 24 color "#FFFFFF" text_align 0.0
+
+        text """
+        💡 User Sensitivity Advisory
+        This game includes AI-generated responses that may be unexpected, emotionally challenging, or morally complex.
+        Some in-game decisions, questionares and AI dialogues may touch on sensitive topics.
+        """ size 22 color "#FFFFFF"
+
+        text """
+        🚨 Player Discretion Advised (18+ Only)
+        If you feel uncomfortable at any point, you are free to stop playing.
+        By continuing, you acknowledge that you have read and accepted the terms of use.
+        """ size 22 color "#FFFFFF"
+
+        text """
+        🔐 Data Privacy Statement
+        All user data gathered is annonymous and non-attributable to an individual.
+        We do not share any personal data from players with third parties.
+        All game saves are temporary and will be deleted after the conclusion of the study.
+        """ size 22 color "#FFFFFF"
+
+        text """
+        ⚖️ Liability Disclaimer
+        The developers, publishers, and any affiliated institutions assume no liability for any claims, damages, or distress resulting from playing this game.
+        By continuing, you waive all legal claims against the creators and any associated entities.
+        """ size 22 color "#FFFFFF"
+
+    vbox:
+        xalign 0.5
+        yalign 0.9
+        spacing 10
+
+        textbutton "I understand and wish to proceed." action Return()
+        textbutton "Exit Game" action Quit()
+        
+################################################################################
 ## Logs
 ################################################################################
 
