@@ -22,6 +22,7 @@ cache/
 renpy.log
 thumbs.db
 traceback.txt
+.~lock.*
 
 # C extensions
 *.so
