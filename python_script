@@ -18,7 +18,7 @@ class MyClass(GeneratedClass):
         self.tts = None
         self.animation = None
         self.audio_player = None
-        self.audio_directory = "/home/nao/audio_files/"  # Directory to store audio files on NAO
+        self.audio_directory = "../audio_files/"  # Directory to store audio files on NAO
 
     def onLoad(self):
         # Initialize the NAOqi session and modules
@@ -34,10 +34,12 @@ class MyClass(GeneratedClass):
             self.animation = self.session.service("ALAnimationPlayer")
             self.audio_player = self.session.service("ALAudioPlayer")
             
+            self.logger.info("working directory: {}".format(os.getcwd()))
             # Make sure audio directory exists
             if not os.path.exists(self.audio_directory):
                 try:
                     os.makedirs(self.audio_directory)
+                    self.logger.info("Created audio directory: {}".format(self.audio_directory))
                 except Exception as e:
                     self.logger.warning("Could not create audio directory: {}".format(e))
             
