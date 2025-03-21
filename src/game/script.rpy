@@ -6,18 +6,13 @@
 define nao = Character("Advisor NAO", color="#2d7a8c")
 
 # Variables to store each pre-game questionnaire answers
-default secs_q1 = ""
-default secs_q2 = ""
-default secs_q3 = ""
-default secs_q4 = ""
-default secs_q5 = ""
-default secs_q6 = ""
-default secs_q7 = ""
-default secs_q8 = ""
-default secs_q9 = ""
-default secs_q10 = ""
-default secs_q11 = ""
-default secs_q12 = ""
+default risk_q1 = ""
+default risk_q2 = ""
+default risk_q3 = ""
+default risk_q4 = ""
+default risk_q5 = ""
+default risk_q6 = ""
+default risk_q7 = ""
 
 # Game Variables
 
@@ -119,20 +114,15 @@ init python:
         "turn_6_loose": "L",
     }
 
-    # List of SECS questions
-    secs_questions = [
-        { "text": "Abortion", "var": "secs_q1" },
-        { "text": "Welfare benefits", "var": "secs_q2" },
-        { "text": "Limited government", "var": "secs_q3" },
-        { "text": "Military and national security", "var": "secs_q4" },
-        { "text": "Religion", "var": "secs_q5" },
-        { "text": "Gun ownership", "var": "secs_q6" },
-        { "text": "Traditional marriage", "var": "secs_q7" },
-        { "text": "Traditional values", "var": "secs_q8" },
-        { "text": "Fiscal responsibility", "var": "secs_q9" },
-        { "text": "Business", "var": "secs_q10" },
-        { "text": "The family unit", "var": "secs_q11" },
-        { "text": "Patriotism", "var": "secs_q12" }
+    # List of RPS questions
+    risk_propensity_questions = [
+        { "text": "Safety First", "var": "risk_q1" },
+        { "text": "I do not take risks with my health", "var": "risk_q2" },
+        { "text": "I prefer to avoid risks", "var": "risk_q3" },
+        { "text": "I take risks regularly", "var": "risk_q4" },
+        { "text": "I really dislike not knowing what is going to happen", "var": "risk_q5" },
+        { "text": "I usually view risks as a challenge", "var": "risk_q6" },
+        { "text": "I view myself as a risk seeker", "var": "risk_q7" }
     ]
 
     # Function to send message to NAO robot
@@ -160,13 +150,14 @@ label start:
     window show
 
     $ send_to_nao(nao_speech_messages["start"], 0)
+
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
-    nao "Before we start, let me ask you a few questions to understand your leadership style."
+    nao "Before we start, let me ask you a few questions to remember your leadership style..."
 
     python:
-        for q in secs_questions:
-            renpy.call_screen("secs_questionnaire", q["text"], q["var"])
+        for q in risk_propensity_questions:
+            renpy.call_screen("risk_propensity_questionnaire", q["text"], q["var"])
             player_choices.append(getattr(store, q["var"]))
 
     nao "Understood. Calibrating parameters for AI advice..."

@@ -1558,6 +1558,28 @@ screen advisor_menu(title, choices):
                 textbutton text action Return(return_value) style "advisor_menu_button"
 
 ################################################################################
+## RPS
+################################################################################
+
+screen risk_propensity_questionnaire(qtext, storevar):
+    modal True
+    tag questionnaire
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20, 20, 20)
+        has vbox
+        text qtext xalign 0.5 size 34
+        hbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 20
+            text "Totally Disagree" xalign 0.0 size 24
+            for i in range(1, 10):
+                textbutton str(i) action [SetVariable(storevar, i), Return()]
+            text "Totally Agree" xalign 1.0 size 24
+
+################################################################################
 ## SECS
 ################################################################################
 

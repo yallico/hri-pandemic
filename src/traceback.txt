@@ -1,60 +1,72 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
-After initialization, but before game start.
-  File "game/screens.rpy", line 1564, in prepare_screen
-    screen secs_questionnaire(qtext, storevar):
-  File "game/screens.rpy", line 1564, in prepare
-    screen secs_questionnaire(qtext, storevar):
-  File "game/screens.rpy", line 1566, in prepare
+While running game code:
+  File "game/script.rpy", line 158, in script
+    python:
+  File "game/script.rpy", line 160, in <module>
+    renpy.call_screen("risk_propensity_questionnaire", q["text"], q["var"])
+  File "game/screens.rpy", line 1564, in execute
+    screen risk_propensity_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1564, in execute
+    screen risk_propensity_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1567, in execute
     frame:
-  File "game/screens.rpy", line 1566, in prepare
-    frame:
-  File "game/screens.rpy", line 1570, in prepare
+  File "game/screens.rpy", line 1570, in execute
     has vbox
-  File "game/screens.rpy", line 1570, in prepare
-    has vbox
-  File "game/screens.rpy", line 1572, in prepare
-    text "How positive or negative do you feel about each issue on the scale of 0 to 100?\n
-SyntaxError: EOL while scanning string literal (screens.rpy, line 1572)
+  File "game/screens.rpy", line 1571, in execute
+    text question
+  File "game/screens.rpy", line 1571, in <module>
+    text question
+NameError: name 'question' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "/home/yallicol/renpy-sdk/renpy/bootstrap.py", line 359, in bootstrap
-    renpy.main.main()
-  File "/home/yallicol/renpy-sdk/renpy/main.py", line 652, in main
-    run(restart)
-  File "/home/yallicol/renpy-sdk/renpy/main.py", line 94, in run
-    renpy.display.screen.prepare_screens()
-  File "/home/yallicol/renpy-sdk/renpy/display/screen.py", line 1024, in prepare_screens
-    s.ast.prepare_screen()
-  File "game/screens.rpy", line 1564, in prepare_screen
-    screen secs_questionnaire(qtext, storevar):
-  File "game/screens.rpy", line 1564, in prepare
-    screen secs_questionnaire(qtext, storevar):
-  File "game/screens.rpy", line 1566, in prepare
+  File "game/script.rpy", line 158, in script
+    python:
+  File "/home/yallicol/renpy-sdk/renpy/ast.py", line 827, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1178, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "game/script.rpy", line 160, in <module>
+    renpy.call_screen("risk_propensity_questionnaire", q["text"], q["var"])
+  File "/home/yallicol/renpy-sdk/renpy/exports/statementexports.py", line 345, in call_screen
+    rv = renpy.ui.interact(mouse="screen", type="screen", roll_forward=roll_forward)
+  File "/home/yallicol/renpy-sdk/renpy/ui.py", line 301, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "/home/yallicol/renpy-sdk/renpy/display/core.py", line 2215, in interact
+    repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, pause=pause, pause_start=pause_start, pause_modal=pause_modal, **kwargs) # type: ignore
+  File "/home/yallicol/renpy-sdk/renpy/display/core.py", line 2745, in interact_core
+    root_widget.visit_all(lambda d : d.per_interact())
+  File "/home/yallicol/renpy-sdk/renpy/display/displayable.py", line 434, in visit_all
+    d.visit_all(callback, seen)
+  File "/home/yallicol/renpy-sdk/renpy/display/displayable.py", line 434, in visit_all
+    d.visit_all(callback, seen)
+  File "/home/yallicol/renpy-sdk/renpy/display/displayable.py", line 434, in visit_all
+    d.visit_all(callback, seen)
+  File "/home/yallicol/renpy-sdk/renpy/display/screen.py", line 480, in visit_all
+    callback(self)
+  File "/home/yallicol/renpy-sdk/renpy/display/core.py", line 2745, in <lambda>
+    root_widget.visit_all(lambda d : d.per_interact())
+  File "/home/yallicol/renpy-sdk/renpy/display/screen.py", line 491, in per_interact
+    self.update()
+  File "/home/yallicol/renpy-sdk/renpy/display/screen.py", line 697, in update
+    self.screen.function(**self.scope)
+  File "game/screens.rpy", line 1564, in execute
+    screen risk_propensity_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1564, in execute
+    screen risk_propensity_questionnaire(qtext, storevar):
+  File "game/screens.rpy", line 1567, in execute
     frame:
-  File "game/screens.rpy", line 1566, in prepare
-    frame:
-  File "game/screens.rpy", line 1570, in prepare
+  File "game/screens.rpy", line 1570, in execute
     has vbox
-  File "game/screens.rpy", line 1570, in prepare
-    has vbox
-  File "game/screens.rpy", line 1572, in prepare
-    text "How positive or negative do you feel about each issue on the scale of 0 to 100?\n
-  File "/home/yallicol/renpy-sdk/renpy/py3analysis.py", line 803, in ast_eval
-    return self.ast_eval_literal(expr)[0]
-  File "/home/yallicol/renpy-sdk/renpy/py3analysis.py", line 785, in ast_eval_literal
-    expr = py_compile(expr, 'eval', ast_node=True)
-  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1144, in py_compile
-    raise e
-  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1081, in py_compile
-    raise orig_e
-  File "/home/yallicol/renpy-sdk/renpy/python.py", line 1073, in py_compile
-    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
-SyntaxError: EOL while scanning string literal (screens.rpy, line 1572)
+  File "game/screens.rpy", line 1571, in execute
+    text question
+  File "game/screens.rpy", line 1571, in <module>
+    text question
+NameError: name 'question' is not defined
 
 Linux-6.8.9-100.fc38.x86_64-x86_64-with-glibc2.37 x86_64
 Ren'Py 8.3.4.24120703
 src 1.0
-Wed Mar 12 14:07:45 2025
+Fri Mar 21 15:17:22 2025
