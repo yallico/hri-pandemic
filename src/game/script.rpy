@@ -6,6 +6,7 @@
 define nao = Character("Advisor NAO", color="#2d7a8c")
 
 # Variables to store each pre-game questionnaire answers
+default participant_gender = ""
 default risk_q1 = ""
 default risk_q2 = ""
 default risk_q3 = ""
@@ -155,13 +156,15 @@ label start:
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     nao "Before we start, let me ask you a few questions to remember your leadership style..."
 
+    call screen gender_questionnaire("participant_gender")
+
     python:
         for q in risk_propensity_questions:
             renpy.call_screen("risk_propensity_questionnaire", q["text"], q["var"])
             player_choices.append(getattr(store, q["var"]))
 
     nao "Understood. Calibrating parameters for AI advice..."
-    #TODO: we need a function that takes results from SECs and configures NAO advice accordingly
+    #TODO: we need a function that takes results from RPS and configures NAO advice accordingly
 
     jump turn_1 
 

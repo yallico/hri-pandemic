@@ -1558,6 +1558,26 @@ screen advisor_menu(title, choices):
                 textbutton text action Return(return_value) style "advisor_menu_button"
 
 ################################################################################
+## Gender
+################################################################################
+
+screen gender_questionnaire(storevar):
+    modal True
+    tag questionnaire
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20, 20, 20)
+        has vbox
+        text "Please choose your gender" xalign 0.5 size 34
+        hbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 20
+            textbutton "Male" action [SetVariable(storevar, "Male"), Return()]
+            textbutton "Female" action [SetVariable(storevar, "Female"), Return()]
+
+################################################################################
 ## RPS
 ################################################################################
 
