@@ -3,6 +3,7 @@ import time
 import qi
 import almath
 import threading
+import os
 
 class MyClass(GeneratedClass):
     def __init__(self):
@@ -16,6 +17,8 @@ class MyClass(GeneratedClass):
         self.posture = None
         self.tts = None
         self.animation = None
+        self.audio_player = None
+        self.audio_directory = "../audio_files/"  # Directory to store audio files on NAO
 
     def onLoad(self):
         # Initialize the NAOqi session and modules
@@ -26,9 +29,20 @@ class MyClass(GeneratedClass):
             self.motion = self.session.service("ALMotion")
             self.posture = self.session.service("ALRobotPosture")
             self.tts = self.session.service("ALTextToSpeech")
-            # 验证TTS是否正常
-            self.tts.say(" ")  # 尝试一个空字符串，测试连接
+            # Validate TTS is working
+            self.tts.say(" ")  # Try an empty string to test connection
             self.animation = self.session.service("ALAnimationPlayer")
+            self.audio_player = self.session.service("ALAudioPlayer")
+            
+            self.logger.info("working directory: {}".format(os.getcwd()))
+            # Make sure audio directory exists
+            if not os.path.exists(self.audio_directory):
+                try:
+                    os.makedirs(self.audio_directory)
+                    self.logger.info("Created audio directory: {}".format(self.audio_directory))
+                except Exception as e:
+                    self.logger.warning("Could not create audio directory: {}".format(e))
+            
             self.logger.info("Successfully connected to NAOqi services")
         except Exception as e:
             self.logger.error("Could not connect to NAOqi services: {}".format(e))
@@ -102,6 +116,9 @@ class MyClass(GeneratedClass):
                             self.robot_move(x, y, theta)
                         except ValueError:
                             self.logger.error("Invalid move parameters: {}".format(param))
+                elif action == "playaudio":
+                    # New command to directly play a wav file
+                    self.play_audio_file(param)
                 else:
                     self.logger.warning("Unknown command type: {}".format(action))
             else:
@@ -157,30 +174,93 @@ class MyClass(GeneratedClass):
             return False
 
     def robot_say(self, text):
-        """Make the robot speak while raising its arm"""
+        """Make the robot speak by playing pre-generated audio or generating it on the fly"""
         try:
-            # Check if TTS service is available
-            if not self.tts:
+            # Check if we need to generate audio from text
+            if self.tts and self.audio_player:
+                # Raise arm as a gesture while speaking
+                arm_raised = self.raise_arm()
+                
+                # Generate a filename based on a hash of the text to avoid duplicates
+                import hashlib
+                text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()[:10]
+                wav_file_path = os.path.join(self.audio_directory, "speech_{}.wav".format(text_hash))
+                
+                # Check if we already have this audio file, or need to generate it
+                if not os.path.exists(wav_file_path):
+                    # Generate the wav file with TTS
+                    try:
+                        self.tts.sayToFile(text, wav_file_path)
+                        self.logger.info("Generated audio file: {}".format(wav_file_path))
+                    except Exception as e:
+                        self.logger.error("Failed to generate audio file: {}".format(e))
+                        # Fallback to direct TTS if generation fails
+                        self.tts.say(text)
+                        self.logger.info("Used direct TTS as fallback for: {}".format(text))
+                        
+                        if arm_raised:
+                            time.sleep(0.5)
+                            self.lower_arm()
+                        return
+                
+                # Play the audio file
                 try:
-                    self.tts = self.session.service("ALTextToSpeech")
+                    audio_id = self.audio_player.playFile(wav_file_path)
+                    self.logger.info("Playing audio file: {} (ID: {})".format(wav_file_path, audio_id))
+                    
+                    # Wait for audio to finish (there should be a better way to do this with callbacks)
+                    # For now, we'll estimate the duration based on text length
+                    # Approximately 15 characters per second of speech
+                    duration = max(1, len(text) / 15.0)
+                    time.sleep(duration)
+                    
                 except Exception as e:
-                    self.logger.error("Failed to reconnect to TTS service: {}".format(e))
-                    return
-            
-            # Raise arm as a gesture while speaking
-            arm_raised = self.raise_arm()
-            
-            # Speak the text
-            self.tts.say(text)
-            self.logger.info("Robot said: {}".format(text))
-            
-            # Lower arm after speaking
-            if arm_raised:
-                time.sleep(0.5)  # Small delay to ensure speech is complete
-                self.lower_arm()
+                    self.logger.error("Failed to play audio file: {}".format(e))
+                    # Fallback to direct TTS
+                    self.tts.say(text)
+                    self.logger.info("Used direct TTS as fallback for: {}".format(text))
+                
+                # Lower arm after speaking
+                if arm_raised:
+                    time.sleep(0.5)  # Small delay to ensure speech is complete
+                    self.lower_arm()
+            else:
+                self.logger.error("TTS or AudioPlayer service not available")
                 
         except Exception as e:
             self.logger.error("Error in robot_say: {}".format(e))
+
+    def play_audio_file(self, file_path):
+        """Play a pre-existing wav file"""
+        try:
+            if self.audio_player:
+                # Raise arm as a gesture while speaking
+                arm_raised = self.raise_arm()
+                
+                # If file_path doesn't contain a directory, assume it's in the audio_directory
+                if "/" not in file_path:
+                    file_path = os.path.join(self.audio_directory, file_path)
+                
+                # Check if the file exists
+                if not os.path.exists(file_path):
+                    self.logger.error("Audio file not found: {}".format(file_path))
+                    return
+                
+                # Play the audio file
+                audio_id = self.audio_player.playFile(file_path)
+                self.logger.info("Playing audio file: {} (ID: {})".format(file_path, audio_id))
+                
+                # Wait for an estimated duration (could be improved with a callback)
+                # For pre-recorded files, we'll wait a fixed time then check if it's done
+                time.sleep(2.0)  # Wait 2 seconds by default
+                
+                # Lower arm after speaking
+                if arm_raised:
+                    self.lower_arm()
+            else:
+                self.logger.error("AudioPlayer service not available")
+        except Exception as e:
+            self.logger.error("Error playing audio file: {}".format(e))
 
     def robot_gesture(self, gesture_name):
         """Execute a gesture/animation on the robot"""

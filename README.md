@@ -19,13 +19,24 @@ This project enables a NAO/Pepper robot to interact with a Renpy-based pandemic 
 6. If needed, modify the port number to match your configuration
 7. Save the behavior
 
-### Step 2: Launch the Renpy Game
+### Step 2: Prepare Audio Files (Optional)
+
+For better speech quality, you can use pre-recorded audio files:
+
+1. Create WAV audio files for robot speech (sample rate: 22050Hz for European languages, 16000Hz for Asian languages, format: S16_LE, 1 channel)
+2. Name the files according to the mapping in `src/game/robotcontrol.py` (e.g., `init_greeting.wav`, `turn1_lockdown.wav`, etc.)
+3. Transfer these files to the NAO robot in the `/home/nao/audio_files/` directory
+4. If this directory doesn't exist, the system will attempt to create it automatically
+
+If audio files are not available, the system will fall back to using text-to-speech.
+
+### Step 3: Launch the Renpy Game
 
 1. Navigate to your Renpy game directory
 2. Launch the game using the Renpy launcher
 3. The game will automatically start the socket server when it begins
 
-### Step 3: Run the Robot Behavior
+### Step 4: Run the Robot Behavior
 
 1. Make sure your NAO/Pepper robot is powered on and connected to the network
 2. If using a physical robot, update the connection string in the Python Box:
@@ -49,6 +60,8 @@ For proper operation, follow this sequence:
 
 - The robot will provide spoken advice at key decision points
 - Arm gestures accompany speech for more expressive communication
+- Support for pre-recorded audio files for higher quality speech
+- Automatic audio file generation using TTS when needed
 - Automatic reconnection if the connection is lost
 - Graceful shutdown when the game ends
 
@@ -56,6 +69,7 @@ For proper operation, follow this sequence:
 
 - **Connection Issues**: Ensure both the game and robot are on the same network
 - **TTS Errors**: If speech doesn't work, check that NAOqi services are running
+- **Audio File Issues**: Verify WAV files are in the correct format (22050Hz, S16_LE, 1 channel)
 - **Arm Movement Issues**: Make sure the robot has sufficient space to move its arms
 - **Port Conflicts**: If port 8888 is already in use, change it in both the Python script and Renpy game
 
@@ -71,6 +85,11 @@ src/
       └── nao_robot_behavior.xar  # Choregraphe behavior file
 
 python_script                  # Python code for the Choregraphe box
+
+/home/nao/audio_files/         # Directory on the NAO robot for audio files
+  ├── init_greeting.wav        # Audio file for initial greeting
+  ├── turn1_lockdown.wav       # Audio file for lockdown response
+  └── ... (other audio files)
 ```
 
 ## How It Works
@@ -78,7 +97,8 @@ python_script                  # Python code for the Choregraphe box
 The game establishes a socket server connection that the robot connects to. When key events occur in the game, it sends commands to the robot, primarily to make it speak and provide advice to the player.
 
 The integration uses a simple command protocol:
-- `say:text` to make the robot speak
+- `playaudio:filename.wav` to play a specific audio file
+- `say:text` to make the robot speak (fallback if audio file not available)
 - `gesture:name` to make the robot perform an animation
 - `posture:name` to set the robot's posture
 - `move:x,y,theta` to move the robot

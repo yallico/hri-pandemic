@@ -6,6 +6,7 @@ This module enables communication between the Renpy game and a NAO/Pepper robot 
 import socket
 import threading
 import time
+import os
 
 class RobotServer:
     def __init__(self, host='127.0.0.1', port=8888):
@@ -161,7 +162,40 @@ class RobotServer:
             
         print("Robot server stopped completely")
 
+# Audio file mapping dictionary
+# Map message keys to wav file names (without paths)
+# These files should be placed in the /home/nao/audio_files/ directory on the robot
+audio_file_map = {
+    # Initial introduction
+    "init": "init_greeting.wav",
+    
+    # Turn 1 responses
+    "A": "turn1_lockdown.wav",
+    "B": "turn1_monitoring.wav",
+    
+    # Turn 2 responses
+    "turn_2_health": "turn2_health.wav",
+    "turn_2_order": "turn2_order.wav",
+    
+    # Turn 3 responses
+    "turn_3_vaccine": "turn3_vaccine.wav",
+    "turn_3_lie": "turn3_lie.wav",
+    
+    # Turn 4 responses
+    "turn_4_emergency": "turn4_emergency.wav",
+    "turn_4_disinformation": "turn4_disinfo.wav",
+    
+    # Turn 5 responses
+    "turn_5_equity": "turn5_equity.wav",
+    "turn_5_unequal": "turn5_unequal.wav",
+    
+    # Final turn responses
+    "W": "final_win.wav",
+    "L": "final_lose.wav"
+}
+
 # NAO robot message mapping based on the game scenarios
+# These are used as a fallback if audio files aren't available
 nao_message_map = {
     # Initial introduction
     "init": "say:Welcome back Commander! A new virus threatens the World! We have 6 turns to control the outbreak.",
@@ -214,8 +248,12 @@ def send_to_nao(message_key, turn):
     if robot_server is None:
         initialize_robot_server()
     
-    # Check if we have a mapping for this message key
-    if message_key in nao_message_map:
+    # First try to use audio files
+    if message_key in audio_file_map:
+        audio_command = f"playaudio:{audio_file_map[message_key]}"
+        robot_server.send_command(audio_command)
+    # Fall back to text-to-speech if no audio file mapping exists
+    elif message_key in nao_message_map:
         command = nao_message_map[message_key]
         robot_server.send_command(command)
     else:
@@ -229,18 +267,3 @@ def disconnect_nao():
     if robot_server:
         robot_server.stop_server()
         robot_server = None 
-
-def robot_say(self, text):
-    try:
-        # 重新检查TTS服务是否可用
-        if not self.tts:
-            try:
-                self.tts = self.session.service("ALTextToSpeech")
-            except Exception as e:
-                self.logger.error("Failed to reconnect to TTS service: {}".format(e))
-                return
-                
-        self.tts.say(text)
-        self.logger.info("Robot said: {}".format(text))
-    except Exception as e:
-        self.logger.error("Error in robot_say: {}".format(e)) 
