@@ -49,7 +49,7 @@ class MyClass(GeneratedClass):
 
     def connect_to_server(self):
         # Connection parameters
-        host = '127.0.0.1'  # Localhost, change to server IP if needed
+        host = '127.0.0.1'  # change to your laptop's IP address when running real robot
         port = 8888         # Make sure this matches the renpy server port
 
         try:

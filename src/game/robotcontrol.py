@@ -9,7 +9,7 @@ import time
 import os
 
 class RobotServer:
-    def __init__(self, host='127.0.0.1', port=8888):
+    def __init__(self, host='0.0.0.0', port=8888):
         """Initialize the robot control server
         
         Args:
