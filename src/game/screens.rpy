@@ -1574,8 +1574,8 @@ screen gender_questionnaire(storevar):
             xalign 0.5
             yalign 0.5
             spacing 20
-            textbutton "Male" action [SetVariable(storevar, "Male"), Return()]
-            textbutton "Female" action [SetVariable(storevar, "Female"), Return()]
+            textbutton "Male" action [SetVariable(storevar, "male"), Return()]
+            textbutton "Female" action [SetVariable(storevar, "female"), Return()]
 
 ################################################################################
 ## RPS
