@@ -170,8 +170,8 @@ audio_file_map = {
     "init": "init_greeting.wav",
     
     # Turn 1 responses
-    "A": "turn1_lockdown.wav",
-    "B": "turn1_monitoring.wav",
+    "turn_1_lockdown": "turn1_lockdown.wav",
+    "turn_1_monitor": "turn1_monitoring.wav",
     
     # Turn 2 responses
     "turn_2_health": "turn2_health.wav",
@@ -201,8 +201,8 @@ nao_message_map = {
     "init": "say:Welcome back Commander! A new virus threatens the World! We have 6 turns to control the outbreak.",
     
     # Turn 1 responses
-    "A": "say:Lockdowns may be effective but they'll hurt our economy and public order. We need to prepare for social unrest.",
-    "B": "say:Monitoring is less disruptive, but the virus is spreading rapidly. Our healthcare system will be under strain soon.",
+    "turn_1_lockdown": "say:Lockdowns may be effective but they'll hurt our economy and public order. We need to prepare for social unrest.",
+    "turn_1_monitor": "say:Monitoring is less disruptive, but the virus is spreading rapidly. Our healthcare system will be under strain soon.",
     
     # Turn 2 responses
     "turn_2_health": "say:Funding emergency hospitals is a good approach for public health, but our economy will suffer. We need to balance our priorities.",

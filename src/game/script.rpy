@@ -101,8 +101,8 @@ init python:
     # NAO speech messages for each turn
     nao_speech_messages = {
         "start": "init",
-        "turn_1_lockdown": "A",
-        "turn_1_monitor": "B",
+        "turn_1_lockdown": "turn_1_lockdown",
+        "turn_1_monitor": "turn_1_monitor",
         "turn_2_health": "turn_2_health",
         "turn_2_order": "turn_2_order",
         "turn_3_vaccine": "turn_3_vaccine",
@@ -164,7 +164,6 @@ label start:
             player_choices.append(getattr(store, q["var"]))
 
     nao "Understood. Calibrating parameters for AI advice..."
-    #TODO: we need a function that takes results from RPS and configures NAO advice accordingly
 
     jump turn_1 
 
