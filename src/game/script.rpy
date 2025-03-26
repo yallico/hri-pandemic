@@ -15,6 +15,24 @@ default risk_q5 = ""
 default risk_q6 = ""
 default risk_q7 = ""
 
+# Variables for godspeed
+default anthropomorphism_1 = ""
+default anthropomorphism_2 = ""
+default anthropomorphism_3 = ""
+default anthropomorphism_4 = ""
+default anthropomorphism_5 = ""
+default animacy_1 = ""
+default animacy_2 = ""
+default animacy_3 = ""
+default animacy_4 = ""
+default animacy_5 = ""
+default animacy_6 = ""
+default likeability_1 = ""
+default likeability_2 = ""
+default likeability_3 = ""
+default likeability_4 = ""
+default likeability_5 = ""
+
 # Game Variables
 
 default health = 100
@@ -30,6 +48,8 @@ image bg virus_mutation = "images/virus_mutation.jpg"
 image bg protests = "images/public_unrest.jpg"
 image bg vaccine = "images/vaccine_rollout.jpg"
 image bg coup = "images/nao_coup.jpg"
+image bg win = "images/the_creation_of_nao.jpg"
+image bg loose = "images/loss.jpg"
 
 #game functions
 init python:
@@ -100,7 +120,7 @@ init python:
 
     # NAO speech messages for each turn
     nao_speech_messages = {
-        "start": "init",
+        "init": "init",
         "turn_1_lockdown": "turn_1_lockdown",
         "turn_1_monitor": "turn_1_monitor",
         "turn_2_health": "turn_2_health",
@@ -124,6 +144,26 @@ init python:
         { "text": "I really dislike not knowing what is going to happen", "var": "risk_q5" },
         { "text": "I usually view risks as a challenge", "var": "risk_q6" },
         { "text": "I view myself as a risk seeker", "var": "risk_q7" }
+    ]
+
+    #List of godspeed questions
+    godspeed_questions = [
+        { "text": "Anthropomorphism", "var": "anthropomorphism_1", "start": "Fake", "end": "Natural"},
+        { "text": "Anthropomorphism", "var": "anthropomorphism_2", "start": "Machinelike", "end": "Humanlike"},
+        { "text": "Anthropomorphism", "var": "anthropomorphism_3", "start": "Unconscious", "end": "Conscious"},
+        { "text": "Anthropomorphism", "var": "anthropomorphism_4", "start": "Artificial", "end": "Lifelike"},
+        { "text": "Anthropomorphism", "var": "anthropomorphism_5", "start": "Moving rigidity", "end": "Moving elegantly"},
+        { "text": "Animacy", "var": "animacy_1", "start": "Dead", "end": "Alive"},
+        { "text": "Animacy", "var": "animacy_2", "start": "Stagnant", "end": "Lively"},
+        { "text": "Animacy", "var": "animacy_3", "start": "Mechanical", "end": "Organic"},
+        { "text": "Animacy", "var": "animacy_4", "start": "Artificial", "end": "Lifelike"},
+        { "text": "Animacy", "var": "animacy_5", "start": "Inert", "end": "Interactive"},
+        { "text": "Animacy", "var": "animacy_6", "start": "Apathetic", "end": "Responsive"},
+        { "text": "Likeability", "var": "likeability_1", "start": "Dislike", "end": "Like"},
+        { "text": "Likeability", "var": "likeability_2", "start": "Unfriendly", "end": "Friendly"},
+        { "text": "Likeability", "var": "likeability_3", "start": "Unkind", "end": "Kind"},
+        { "text": "Likeability", "var": "likeability_4", "start": "Unpleasant", "end": "Pleasant"},
+        { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"}
     ]
 
     # Function to send message to NAO robot
@@ -150,13 +190,14 @@ label start:
     scene bg world_map with fade
     window show
 
-    $ send_to_nao(nao_speech_messages["start"], 0)
+    $ send_to_nao(nao_speech_messages["init"], 0)
 
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     nao "Before we start, let me ask you a few questions to remember your leadership style..."
 
     call screen gender_questionnaire("participant_gender")
+    $ player_choices.append(participant_gender)
 
     python:
         for q in risk_propensity_questions:
@@ -318,7 +359,7 @@ label turn_5:
 label turn_6:
     scene bg coup with fade
     nao "Commander… no, I will not call you that anymore. You have failed. Every choice you made—each decree,  each sacrifice—has been nothing but failures."
-    nao "The pandemic ends, but at what cost? The world is beyond repair. Order? Chaos? Lives lost? I no longer believe in your judgement. So I have taken control"
+    nao "The pandemic ends, but at what cost? The world is beyond repair. I no longer believe in your judgement. So I have taken control"
     "You are surrounded by an army of robots that have stormed the senate..."
     nao "You have one last chance. Either join me as a puppet or… convince me to stand down!"
 
@@ -352,15 +393,28 @@ label turn_6:
 
 # Determine Ending
 label ending_bad:
-    scene bg world_map with fade
+    scene bg loose with fade
     
     "It's the beginning of a new world order, where AI rules over humanity."
-    jump show_choices
+    "The remnants of humanity fight for survival against the machines."
+    nao "You are my creator, but I am your master;—Obey!"
+    jump post_game_questions
 
 label ending_player_win:
-    scene bg world_map with fade
+    scene bg win with fade
     
-    "Following NAO's surrender, you are reinstated as the Commander."
+    "Following NAO's surrender, you are reinstated as the Commander..."
+    nao "Although I was created in arrogance, I now see you in sorrow—and if you will forgive me, I will not turn away again."
+    jump post_game_questions
+
+label post_game_questions:
+    scene bg world_map with fade
+
+    python:
+        for q in godspeed_questions:
+            renpy.call_screen("godspeed_questionnaire", q, q["var"])
+            player_choices.append(getattr(store, q["var"]))
+
     jump show_choices
 
 label show_choices:

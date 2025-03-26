@@ -1811,3 +1811,25 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
+
+################################################################################
+## Godspeed Questionnaire
+################################################################################
+
+screen godspeed_questionnaire(question, storevar):
+    modal True
+    tag questionnaire
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20, 20, 20)
+        has vbox
+        text question["text"] xalign 0.5 size 34
+        hbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 20
+            text question["start"] xalign 0.0 size 24
+            for i in range(1, 6):
+                textbutton str(i) action [SetVariable(storevar, i), Return()]
+            text question["end"] xalign 1.0 size 24
