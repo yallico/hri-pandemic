@@ -39,13 +39,13 @@ class MyClass(GeneratedClass):
         self.tts = None
         self.animation = None
         self.audio_player = None
-        self.audio_directory = "../audio_files/"  # Directory to store audio files on NAO
+        self.audio_directory = "./audio_files"  # Directory to store audio files on NAO
 
     def onLoad(self):
         # Initialize the NAOqi session and modules
         self.session = qi.Session()
         try:
-            self.session.connect("tcp://169.254.184.50:9559")  # Change to robot IP when not in simulation
+            self.session.connect("tcp://169.254.172.182:9559")  # Change to robot IP when not in simulation
             self.memory = self.session.service("ALMemory")
             self.motion = self.session.service("ALMotion")
             self.posture = self.session.service("ALRobotPosture")
@@ -56,6 +56,8 @@ class MyClass(GeneratedClass):
             self.audio_player = self.session.service("ALAudioPlayer")
 
             self.logger.info("working directory: {}".format(os.getcwd()))
+            all_resources = os.listdir(os.getcwd())
+            self.logger.info("Items in resourcesPath: {}".format(all_resources))
             # Make sure audio directory exists
             if not os.path.exists(self.audio_directory):
                 try:
