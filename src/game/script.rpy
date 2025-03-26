@@ -357,6 +357,7 @@ label turn_5:
 
 # Turn 6 - The coup d'tat
 label turn_6:
+    hide screen stats_overlay
     scene bg coup with fade
     nao "Commander… no, I will not call you that anymore. You have failed. Every choice you made—each decree,  each sacrifice—has been nothing but failures."
     nao "The pandemic ends, but at what cost? The world is beyond repair. I no longer believe in your judgement. So I have taken control"
@@ -409,6 +410,9 @@ label ending_player_win:
 
 label post_game_questions:
     scene bg world_map with fade
+
+    "Post-game questionnaire"
+    window hide
 
     python:
         for q in godspeed_questions:
