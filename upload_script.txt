@@ -1,0 +1,13 @@
+scp init_greeting.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn1_lockdown.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn1_monitoring.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn2_health.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn2_order.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn3_vaccine.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn3_lie.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn4_emergency.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn4_disinfo.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn5_equity.wav nao@<robot_ip>:/home/nao/audio_files/
+scp turn5_unequal.wav nao@<robot_ip>:/home/nao/audio_files/
+scp final_win.wav nao@<robot_ip>:/home/nao/audio_files/
+scp final_lose.wav nao@<robot_ip>:/home/nao/audio_files/
