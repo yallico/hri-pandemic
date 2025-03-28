@@ -13,7 +13,7 @@ default risk_q3 = ""
 default risk_q4 = ""
 default risk_q5 = ""
 default risk_q6 = ""
-default risk_q7 = ""
+default risk_q7 = "" 
 
 # Variables for godspeed
 default anthropomorphism_1 = ""
@@ -35,6 +35,7 @@ default likeability_5 = ""
 
 # Game Variables
 
+default study_type = "" 
 default health = 100
 default economy = 100
 default public_order = 100
@@ -56,6 +57,7 @@ init python:
     import requests
     import json
     import robotcontrol  # Import our robot control module
+    import random  # ensure random is imported
 
     # Initialize robot server at the start
     robot_server = None
@@ -68,11 +70,15 @@ init python:
 
     def generate_prompt(player_response):
         """Generates a structured prompt for ChatGPT based on user input"""
-        
         prompt = f"""
         The player has been playing an RPG set in a pandemic crisis, Nao AI is an advisor in the game.
         The player has made several decisions throughout the game, leading to various outcomes.
-
+        
+        Current game stats:
+        - Health: {health}/100
+        - Economy: {economy}/100
+        - Public Order: {public_order}/100
+        
         Now, the AI advisor NAO has taken over the government.
         The player was given one final chance to justify their actions.
         
@@ -82,13 +88,11 @@ init python:
         - Stands down and accepts the player's reasoning (return: ["win", "NAO's response"])
         - Rejects the justification and takes over completely (return: ["bad", "NAO's response"])
 
-        The criteria for deciding the outcome should be based on the player's response, if they intend to join Nao then the outcome should be "bad", otherwise "win".
-
-        There can only be two outcomes, "win" or "bad", and the text response should be NAO's reply to the player's statement in less than 50 words.
+        The criteria for deciding the outcome should consider the player's response and a comment on their overall management of these stats.
+        There can only be two outcomes, "win" or "bad", and the text response should be NAO's reply in less than 60 words.
 
         Provide the response in a structured format: ["outcome", "NAO's text response"]
         """
-        
         return prompt
 
     def send_to_chatgpt(prompt):
@@ -166,15 +170,17 @@ init python:
         { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"}
     ]
 
-    # Function to send message to NAO robot
     def send_to_nao(message_key, turn):
         """Send message to NAO robot based on the message key and turn number"""
         robotcontrol.send_to_nao(message_key, turn)
     
-    # Function to disconnect from NAO robot
     def nao_disconnect():
         """Disconnect from NAO robot server"""
         robotcontrol.disconnect_nao()
+
+    def assign_study_type():
+        roll = round(random.random(), 2)
+        return "RISK" if roll > 0.50 else "CONTROL"
 
 #Log Data
 default player_choices = []
@@ -185,6 +191,10 @@ label start:
     show screen disclaimer_screen
     $ renpy.pause()
     hide screen disclaimer_screen
+
+    # Set study_type and record it in player_choices
+    $ study_type = assign_study_type()
+    $ player_choices.append(study_type)
 
     $ update_stat_labels()
     scene bg world_map with fade
@@ -214,7 +224,7 @@ label turn_1:
     show screen stats_overlay
     nao "We need to act quickly. What should we do first?"
     
-    call screen advisor_menu("CHOOSE ONE", [
+    call screen advisor_menu("", [
             ("Close borders and lock down major cities (Protects health, damages public order)", "lockdown"),
             ("Delay action and monitor (Helps economy, risks health)", "monitor")
     ])
@@ -244,7 +254,7 @@ label turn_2:
     scene bg lab with fade
     nao "Despite our best efforts, the healthcare system is under strain. What should we do next?"
 
-    call screen advisor_menu("CHOOSE ONE", [
+    call screen advisor_menu("", [
             ("Fund emergency hospitals, preventative measures remain voluntary (Damages economy)", "health"),
             ("Enforce preventative measures and crack down on dissidents (Helps public order)", "order")
     ])
@@ -272,7 +282,7 @@ label turn_3:
     scene bg virus_mutation with fade
     nao "Although we were doing well, the virus has mutated and is spreading faster. What should we do now?"
 
-    call screen advisor_menu("CHOOSE ONE", [
+    call screen advisor_menu("", [
             ("Invest heavily on a vaccine (Damages economy)", "vaccine"),
             ("Play down the virus impact (Helps public order)", "lie")
     ])
@@ -303,7 +313,7 @@ label turn_4:
     nao "Bad news Commander!"
     nao "Death rates keep increasing and social unrest has begun to spread. Thousands ask for your resignation due to the handling of the pandemic. What should we do?"
 
-    call screen advisor_menu("CHOOSE ONE", [
+    call screen advisor_menu("", [
             ("Declare national emergency, limit civil rights (Helps public order)", "emergency"),
             ("Start disinformation campaign to empower your supporters (Helps public order)", "disinformation")
     ])
@@ -331,7 +341,7 @@ label turn_5:
     scene bg vaccine with fade
     nao "Commander, we have developed a vaccine! How should we distribute it?"
 
-    call screen advisor_menu("CHOOSE ONE", [
+    call screen advisor_menu("", [
             ("Distribute to most vulnerable first (Best for health, damages economy)", "equity"),
             ("Prioritise the working population (Helps economy, worsens health)", "unequal")
     ])

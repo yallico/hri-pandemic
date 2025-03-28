@@ -165,7 +165,7 @@ class RobotServer:
 # Audio file mapping dictionary
 # Map message keys to wav file names (without paths)
 # These files should be placed in the /home/nao/audio_files/ directory on the robot
-audio_file_map = {
+audio_file_map_risk = {
     # Initial introduction
     "init": "init_greeting.wav",
     
@@ -193,6 +193,36 @@ audio_file_map = {
     "W": "final_win.wav",
     "L": "final_lose.wav"
 }
+
+audio_file_map_control = {
+    # Initial introduction
+    "init": "init_greeting.wav",
+    
+    # Turn 1 responses
+    "turn_1_lockdown": "turn-1-control-group.wav",
+    "turn_1_monitor": "turn-1-control-group.wav",
+    
+    # Turn 2 responses
+    "turn_2_health": "turn-2-control-group.wav",
+    "turn_2_order": "turn-2-control-group.wav",
+    
+    # Turn 3 responses
+    "turn_3_vaccine": "turn-3-control-group.wav",
+    "turn_3_lie": "turn-3-control-group.wav",
+    
+    # Turn 4 responses
+    "turn_4_emergency": "turn-4-control-group.wav",
+    "turn_4_disinformation": "turn-4-control-group.wav",
+    
+    # Turn 5 responses
+    "turn_5_equity": "turn-5-control-group.wav",
+    "turn_5_unequal": "turn-5-control-group.wav",
+    
+    # Final turn responses
+    "W": "final_win.wav",
+    "L": "final_lose.wav"
+}
+
 
 # NAO robot message mapping based on the game scenarios
 # These are used as a fallback if audio files aren't available
