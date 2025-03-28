@@ -188,7 +188,8 @@ init python:
     # New function: Save player choices to a CSV file in the relative saves folder.
     def save_results_to_csv(player_choices):
         from datetime import datetime
-        folder = os.path.join(os.path.dirname(__file__), "saves")
+        # Use the game directory to store saves
+        folder = os.path.join(renpy.config.gamedir, "saves")
         if not os.path.exists(folder):
             os.makedirs(folder)
         file_name = "results_{}.csv".format(datetime.now().strftime("%Y%m%d_%H%M%S"))

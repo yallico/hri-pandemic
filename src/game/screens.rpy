@@ -1700,7 +1700,7 @@ screen choice_log():
             for choice, value in player_choices.items():
                 text "• [choice]:[value]" size 16 color "#FFD700"  # Gold color
 
-            textbutton "Close" action Return() size 20 xalign 1.0
+            textbutton "Close" action Return() xalign 1.0
 
 
 ################################################################################
