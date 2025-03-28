@@ -265,12 +265,13 @@ def initialize_robot_server():
     robot_server.start_server()
     return robot_server
 
-def send_to_nao(message_key, turn):
+def send_to_nao(message_key, turn, study_type):
     """Send a message to the NAO robot based on message key and game turn
     
     Args:
         message_key (str): Key to look up in the message map
         turn (int): Current game turn
+        study_type: Game study type (e.g., 'risk' or 'control')
     """
     global robot_server
     
@@ -278,16 +279,22 @@ def send_to_nao(message_key, turn):
     if robot_server is None:
         initialize_robot_server()
     
-    # First try to use audio files
-    if message_key in audio_file_map:
-        audio_command = f"playaudio:{audio_file_map[message_key]}"
+    # Determine audio file mapping based on study_type
+    if study_type.upper() == "RISK":
+        audio_map = audio_file_map_risk
+    elif study_type.upper() == "CONTROL":
+        audio_map = audio_file_map_control
+    else:
+        audio_map = {}
+        
+    # Use the appropriate audio file if available
+    if message_key in audio_map:
+        audio_command = f"playaudio:{audio_map[message_key]}"
         robot_server.send_command(audio_command)
-    # Fall back to text-to-speech if no audio file mapping exists
     elif message_key in nao_message_map:
         command = nao_message_map[message_key]
         robot_server.send_command(command)
     else:
-        # Default message if key not found
         default_msg = f"say:I'm processing turn {turn} information."
         robot_server.send_command(default_msg)
 
@@ -296,4 +303,4 @@ def disconnect_nao():
     global robot_server
     if robot_server:
         robot_server.stop_server()
-        robot_server = None 
+        robot_server = None

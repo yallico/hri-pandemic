@@ -1692,15 +1692,15 @@ screen choice_log():
         padding (20, 20)
 
         vbox:
-            spacing 10
-            align (0.5, 0.5)
+            spacing 5
+            align (0.2, 0.5)
 
-            text "Player Decisions Log" size 30 color "#FFFFFF" xalign 0.5
+            text "Player Decisions Log" size 30 color "#FFFFFF" xalign 0.2
 
-            for choice in player_choices:
-                text "• [choice]" size 24 color "#FFD700"  # Gold color
+            for choice, value in player_choices.items():
+                text "• [choice]:[value]" size 16 color "#FFD700"  # Gold color
 
-            textbutton "Close" action Return() xalign 0.5
+            textbutton "Close" action Return() size 20 xalign 1.0
 
 
 ################################################################################

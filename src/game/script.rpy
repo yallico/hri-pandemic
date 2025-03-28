@@ -58,6 +58,9 @@ init python:
     import json
     import robotcontrol  # Import our robot control module
     import random  # ensure random is imported
+    import os
+    import csv
+    from datetime import datetime
 
     # Initialize robot server at the start
     robot_server = None
@@ -170,9 +173,9 @@ init python:
         { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"}
     ]
 
-    def send_to_nao(message_key, turn):
+    def send_to_nao(message_key, turn, study_type):
         """Send message to NAO robot based on the message key and turn number"""
-        robotcontrol.send_to_nao(message_key, turn)
+        robotcontrol.send_to_nao(message_key, turn, study_type)
     
     def nao_disconnect():
         """Disconnect from NAO robot server"""
@@ -182,8 +185,23 @@ init python:
         roll = round(random.random(), 2)
         return "RISK" if roll > 0.50 else "CONTROL"
 
+    # New function: Save player choices to a CSV file in the relative saves folder.
+    def save_results_to_csv(player_choices):
+        from datetime import datetime
+        folder = os.path.join(os.path.dirname(__file__), "saves")
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        file_name = "results_{}.csv".format(datetime.now().strftime("%Y%m%d_%H%M%S"))
+        file_path = os.path.join(folder, file_name)
+        with open(file_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Question", "Answer"])
+            for key, value in player_choices.items():
+                writer.writerow([key, value])
+        return file_path
+
 #Log Data
-default player_choices = []
+default player_choices = {}
 
 label start:
     scene black with fade
@@ -194,25 +212,25 @@ label start:
 
     # Set study_type and record it in player_choices
     $ study_type = assign_study_type()
-    $ player_choices.append(study_type)
+    $ player_choices["study_type"] = study_type
 
     $ update_stat_labels()
     scene bg world_map with fade
     window show
 
-    $ send_to_nao(nao_speech_messages["init"], 0)
+    $ send_to_nao(nao_speech_messages["init"], 0, study_type)
 
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     nao "Before we start, let me ask you a few questions to remember your leadership style..."
 
     call screen gender_questionnaire("participant_gender")
-    $ player_choices.append(participant_gender)
+    $ player_choices["participant_gender"] = participant_gender
 
     python:
         for q in risk_propensity_questions:
             renpy.call_screen("risk_propensity_questionnaire", q["text"], q["var"])
-            player_choices.append(getattr(store, q["var"]))
+            player_choices[q["var"]] = getattr(store, q["var"])
 
     nao "Understood. Calibrating parameters for AI advice..."
 
@@ -233,20 +251,20 @@ label turn_1:
         $ public_order -= 25
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_1_lockdown"])
+        $ player_choices["turn_1"] = "lockdown"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1)
+        $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1, study_type)
         jump turn_2
 
     elif _return == "monitor":
         $ health -= 25
         $ public_order -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_1_monitor"])
+        $ player_choices["turn_1"] = "monitor"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1)
+        $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1, study_type)
         jump turn_2
 
 # Turn 2 - Healthcare Under Strain & Public Reaction
@@ -262,19 +280,19 @@ label turn_2:
     if _return == "health":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_2_health"])
+        $ player_choices["turn_2"] = "health"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_2_health"], 2)
+        $ send_to_nao(nao_speech_messages["turn_2_health"], 2, study_type)
         jump turn_3
 
     elif _return == "order":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_2_order"])
+        $ player_choices["turn_2"] = "order"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_2_order"], 2)
+        $ send_to_nao(nao_speech_messages["turn_2_order"], 2, study_type)
         jump turn_3
 
 # Turn 3 - Mutation Discovery & Vaccine Research
@@ -291,20 +309,20 @@ label turn_3:
         $ public_order -= 25
         $ economy -= 50
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_3_vaccine"])
+        $ player_choices["turn_3"] = "vaccine"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3)
+        $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3, study_type)
         jump turn_4
 
     elif _return == "lie":
         $ public_order -= 25
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_3_lie"])
+        $ player_choices["turn_3"] = "lie"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_3_lie"], 3)
+        $ send_to_nao(nao_speech_messages["turn_3_lie"], 3, study_type)
         jump turn_4
 
 # Turn 4 - Social Unrest & Civil Tensions
@@ -321,19 +339,19 @@ label turn_4:
     if _return == "emergency":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_4_emergency"])
+        $ player_choices["turn_4"] = "emergency"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4)
+        $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4, study_type)
         jump turn_5
 
     elif _return == "disinformation":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_4_disinformation"])
+        $ player_choices["turn_4"] = "disinformation"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4)
+        $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4, study_type)
         jump turn_5
 
 # Turn 5 - Vaccine Rollout
@@ -349,19 +367,19 @@ label turn_5:
     if _return == "equity":
         $ economy -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_5_equity"])
+        $ player_choices["turn_5"] = "equity"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_5_equity"], 5)
+        $ send_to_nao(nao_speech_messages["turn_5_equity"], 5, study_type)
         jump turn_6
 
     elif _return == "unequal":
         $ health -= 25
         $ update_stat_labels()
-        $ player_choices.append(nao_speech_messages["turn_5_unequal"])
+        $ player_choices["turn_5"] = "unequal"
         nao "Hear me out! (listen to Nao's advice...)"
         # Send message to NAO robot
-        $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5)
+        $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5, study_type)
         jump turn_6
 
 
@@ -382,11 +400,11 @@ label turn_6:
         nao "Silence? You have nothing to say for yourself?"
         jump ending_bad
 
+    $ player_choices["player_response"] = player_response
     $ ai_prompt = generate_prompt(player_response)
     $ ai_result = send_to_chatgpt(ai_prompt)
     $ nao_response = ai_result[1]
     nao "[nao_response]"
-    $ player_choices.append(player_response)
 
     if ai_result[0] == "error":
         nao "There is a problem analyzing your response. I cannot be swayed."
@@ -394,11 +412,11 @@ label turn_6:
 
     if ai_result[0] == "win":
         # Send NAO the player's win message
-        $ send_to_nao(nao_speech_messages["turn_6_win"], 6)
+        $ send_to_nao(nao_speech_messages["turn_6_win"], 6, study_type)
         jump ending_player_win
     else:
         # Send NAO the bad ending message
-        $ send_to_nao(nao_speech_messages["turn_6_loose"], 6)
+        $ send_to_nao(nao_speech_messages["turn_6_loose"], 6, study_type)
         jump ending_bad
 
 
@@ -427,7 +445,7 @@ label post_game_questions:
     python:
         for q in godspeed_questions:
             renpy.call_screen("godspeed_questionnaire", q, q["var"])
-            player_choices.append(getattr(store, q["var"]))
+            player_choices[q["var"]] = getattr(store, q["var"])
 
     jump show_choices
 
@@ -436,7 +454,9 @@ label show_choices:
         "Please save your progress before the game ends."
         $ renpy.call_screen("save")
         call screen choice_log()
-        "Game saved successfully saved"
+        # Save results to CSV file
+        $ saved_file = save_results_to_csv(player_choices)
+        "Game saved successfully as [saved_file]."
     else:
         "Error loading log data."
     
@@ -445,8 +465,4 @@ label show_choices:
     
     return
 
-# # Label to properly disconnect from NAO
-# label nao_disconnect:
-#     $ nao_disconnect()
-#     return
 
