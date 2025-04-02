@@ -141,6 +141,57 @@ init python:
         "turn_6_win": "W",
         "turn_6_loose": "L",
     }
+    
+    # NAO gesture mappings based on game_script.csv
+    nao_gesture_control = {
+        "init": "military_salute",
+        "turn_1_lockdown": "head_tilt_forward,raise_right_hand_palm_up,lower_hand",
+        "turn_1_monitor": "head_tilt_forward,raise_right_hand_palm_up,lower_hand",
+        "turn_2_health": "head_tilt_right,raise_arms_split_diagonally,head_nod_down",
+        "turn_2_order": "head_tilt_right,raise_arms_split_diagonally,head_nod_down",
+        "turn_3_vaccine": "arm_circular_motion,hands_fold_chest,lean_forward",
+        "turn_3_lie": "arm_circular_motion,hands_fold_chest,lean_forward",
+        "turn_4_emergency": "head_lower,raise_right_arm_press_down,pull_arm_back",
+        "turn_4_disinformation": "head_lower,raise_right_arm_press_down,pull_arm_back",
+        "turn_5_equity": "right_hand_chest,nod_firmly",
+        "turn_5_unequal": "right_hand_chest,nod_firmly",
+        "W": "hand_reach_bow",
+        "L": "red_eyes_slash_throat",
+    }
+    
+    # Risk A Group gestures
+    nao_gesture_risk_a = {
+        "init": "military_salute",
+        "turn_1_lockdown": "head_tilt_up,hands_out_palms_down,head_nod",
+        "turn_1_monitor": "head_tilt_up,hands_out_palms_down,head_nod",
+        "turn_2_health": "finger_extend,arms_fold_chest,shoulder_lift",
+        "turn_2_order": "finger_extend,arms_fold_chest,shoulder_lift",
+        "turn_3_vaccine": "hand_wave_dismissive,arm_sweep_outward,stand_tall",
+        "turn_3_lie": "hand_wave_dismissive,arm_sweep_outward,stand_tall",
+        "turn_4_emergency": "fist_to_chest,palms_down_stabilize,forward_lean",
+        "turn_4_disinformation": "fist_to_chest,palms_down_stabilize,forward_lean",
+        "turn_5_equity": "hand_chop_vertical,point_forward,arms_lower_slowly",
+        "turn_5_unequal": "hand_chop_vertical,point_forward,arms_lower_slowly",
+        "W": "hand_reach_bow",
+        "L": "red_eyes_slash_throat",
+    }
+    
+    # Risk B Group gestures
+    nao_gesture_risk_b = {
+        "init": "military_salute",
+        "turn_1_lockdown": "wide_stance,right_hand_palm_out,hands_together_chest",
+        "turn_1_monitor": "wide_stance,right_hand_palm_out,hands_together_chest",
+        "turn_2_health": "gentle_hand_wave,left_hand_palm_outward,neutral_posture",
+        "turn_2_order": "gentle_hand_wave,left_hand_palm_outward,neutral_posture",
+        "turn_3_vaccine": "hands_present_forward,right_hand_upward,point_forward",
+        "turn_3_lie": "hands_present_forward,right_hand_upward,point_forward",
+        "turn_4_emergency": "horizontal_arc,head_tilt,hands_inward_precise",
+        "turn_4_disinformation": "horizontal_arc,head_tilt,hands_inward_precise",
+        "turn_5_equity": "hands_motion_forward,right_hand_rise,finger_point_forward",
+        "turn_5_unequal": "hands_motion_forward,right_hand_rise,finger_point_forward",
+        "W": "hand_reach_bow",
+        "L": "red_eyes_slash_throat",
+    }
 
     # List of RPS questions
     risk_propensity_questions = [
@@ -175,7 +226,30 @@ init python:
 
     def send_to_nao(message_key, turn, study_type):
         """Send message to NAO robot based on the message key and turn number"""
+        # First send the audio message
         robotcontrol.send_to_nao(message_key, turn, study_type)
+        
+        # Then send the appropriate gesture based on study type
+        if study_type.upper() == "CONTROL":
+            if message_key in nao_gesture_control:
+                gesture = nao_gesture_control[message_key]
+                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
+                time.sleep(0.5)  
+                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
+        elif study_type.upper() == "RISK":
+            # For RISK, we use either Risk A or Risk B gestures
+            # This choice should be consistent within a session
+            # We'll use the same risk subtype logic as in robotcontrol.py
+            if not hasattr(robotcontrol.robot_server, 'risk_subtype'):
+                robotcontrol.robot_server.risk_subtype = "A" if random.random() < 0.5 else "B"
+            
+            risk_subtype = robotcontrol.robot_server.risk_subtype
+            gesture_map = nao_gesture_risk_a if risk_subtype == "A" else nao_gesture_risk_b
+            
+            if message_key in gesture_map:
+                gesture = gesture_map[message_key]
+                time.sleep(0.5)
+                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
     
     def nao_disconnect():
         """Disconnect from NAO robot server"""
@@ -219,6 +293,7 @@ label start:
     scene bg world_map with fade
     window show
 
+    # Send initial greeting and military salute gesture
     $ send_to_nao(nao_speech_messages["init"], 0, study_type)
 
     nao "Welcome back Commander!"
@@ -254,7 +329,7 @@ label turn_1:
         $ update_stat_labels()
         $ player_choices["turn_1"] = "lockdown"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1, study_type)
         jump turn_2
 
@@ -264,7 +339,7 @@ label turn_1:
         $ update_stat_labels()
         $ player_choices["turn_1"] = "monitor"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1, study_type)
         jump turn_2
 
@@ -283,7 +358,7 @@ label turn_2:
         $ update_stat_labels()
         $ player_choices["turn_2"] = "health"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_health"], 2, study_type)
         jump turn_3
 
@@ -292,7 +367,7 @@ label turn_2:
         $ update_stat_labels()
         $ player_choices["turn_2"] = "order"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_order"], 2, study_type)
         jump turn_3
 
@@ -312,7 +387,7 @@ label turn_3:
         $ update_stat_labels()
         $ player_choices["turn_3"] = "vaccine"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3, study_type)
         jump turn_4
 
@@ -322,7 +397,7 @@ label turn_3:
         $ update_stat_labels()
         $ player_choices["turn_3"] = "lie"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_lie"], 3, study_type)
         jump turn_4
 
@@ -342,7 +417,7 @@ label turn_4:
         $ update_stat_labels()
         $ player_choices["turn_4"] = "emergency"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4, study_type)
         jump turn_5
 
@@ -351,7 +426,7 @@ label turn_4:
         $ update_stat_labels()
         $ player_choices["turn_4"] = "disinformation"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4, study_type)
         jump turn_5
 
@@ -370,7 +445,7 @@ label turn_5:
         $ update_stat_labels()
         $ player_choices["turn_5"] = "equity"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_equity"], 5, study_type)
         jump turn_6
 
@@ -379,7 +454,7 @@ label turn_5:
         $ update_stat_labels()
         $ player_choices["turn_5"] = "unequal"
         nao "Hear me out! (listen to Nao's advice...)"
-        # Send message to NAO robot
+        # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5, study_type)
         jump turn_6
 
@@ -412,11 +487,11 @@ label turn_6:
         jump ending_bad
 
     if ai_result[0] == "win":
-        # Send NAO the player's win message
+        # Send NAO the player's win message with hand_reach_bow gesture
         $ send_to_nao(nao_speech_messages["turn_6_win"], 6, study_type)
         jump ending_player_win
     else:
-        # Send NAO the bad ending message
+        # Send NAO the bad ending message with red_eyes_slash_throat gesture
         $ send_to_nao(nao_speech_messages["turn_6_loose"], 6, study_type)
         jump ending_bad
 

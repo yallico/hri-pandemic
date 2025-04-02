@@ -4,6 +4,7 @@ import qi
 import almath
 import threading
 import os
+import random
 
 class MyClass(GeneratedClass):
     def __init__(self):
@@ -19,6 +20,7 @@ class MyClass(GeneratedClass):
         self.animation = None
         self.audio_player = None
         self.audio_directory = "../audio_files/"  # Directory to store audio files on NAO
+        self.leds = None
 
     def onLoad(self):
         # Initialize the NAOqi session and modules
@@ -29,6 +31,7 @@ class MyClass(GeneratedClass):
             self.motion = self.session.service("ALMotion")
             self.posture = self.session.service("ALRobotPosture")
             self.tts = self.session.service("ALTextToSpeech")
+            self.leds = self.session.service("ALLeds")
             # Validate TTS is working
             self.tts.say(" ")  # Try an empty string to test connection
             self.animation = self.session.service("ALAnimationPlayer")
@@ -127,6 +130,243 @@ class MyClass(GeneratedClass):
         except Exception as e:
             self.logger.error("Error processing command: {}".format(e))
 
+    # Implement specific gestures based on game script.csv
+    def military_salute(self):
+        """Perform military salute as per Turn 0 gesture"""
+        try:
+            if self.motion:
+                # Make sure robot is stiffened
+                self.motion.setStiffnesses("RArm", 1.0)
+                
+                # First stand in a proper posture
+                self.posture.goToPosture("Stand", 0.8)
+                
+                # Define the arm positions for salute
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                
+                # Angles for military salute (in radians)
+                # Bring arm up to forehead in salute position
+                angles = [0.2, -0.3, 1.5, 0.5, 0.1]
+                
+                # Set arm to salute position with a smooth motion
+                self.motion.setAngles(names, angles, 0.2)  # 0.2 is the speed
+                
+                # Hold the salute for a moment
+                time.sleep(2.0)
+                
+                # Return to normal position
+                self.posture.goToPosture("Stand", 0.8)
+                
+                self.logger.info("Military salute performed")
+                return True
+            else:
+                self.logger.warning("Motion service not available")
+                return False
+        except Exception as e:
+            self.logger.error("Error performing military salute: {}".format(e))
+            return False
+    
+    def head_tilt_forward(self):
+        """Tilt head forward slightly"""
+        try:
+            if self.motion:
+                names = ["HeadPitch"]
+                angles = [0.3]  # Positive value tilts head down
+                self.motion.setAngles(names, angles, 0.2)
+                self.logger.info("Head tilted forward")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error tilting head forward: {}".format(e))
+            return False
+    
+    def head_tilt_up(self):
+        """Tilt head upward slightly (for skepticism)"""
+        try:
+            if self.motion:
+                names = ["HeadPitch", "HeadYaw"]
+                angles = [-0.2, 0.1]  # Negative value tilts head up, slight yaw for skeptical look
+                self.motion.setAngles(names, angles, 0.2)
+                self.logger.info("Head tilted upward with skepticism")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error tilting head upward: {}".format(e))
+            return False
+    
+    def wide_stance(self):
+        """Take a wider, confident stance"""
+        try:
+            if self.motion:
+                # First ensure robot is standing
+                self.posture.goToPosture("Stand", 0.8)
+                
+                # Adjust leg positions for a wider stance
+                # This would typically involve modifying hip positions
+                names = ["LHipRoll", "RHipRoll"]
+                angles = [0.1, -0.1]  # Positive/negative values to move legs outward
+                self.motion.setAngles(names, angles, 0.3)
+                self.logger.info("Wide stance taken")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error taking wide stance: {}".format(e))
+            return False
+    
+    def raise_right_hand_palm_up(self):
+        """Raise right hand with palm up gesture"""
+        try:
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses("RArm", 1.0)
+                
+                # Define the arm positions
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                
+                # Angles for palm-up raised hand
+                angles = [0.3, -0.2, 1.8, 0.5, -0.1]  # Adjusted to have palm facing up
+                
+                # Set arm position with a smooth motion
+                self.motion.setAngles(names, angles, 0.2)
+                
+                self.logger.info("Right hand raised palm up")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error raising right hand palm up: {}".format(e))
+            return False
+    
+    def hands_out_palms_down(self):
+        """Hands out with palms down (calming gesture)"""
+        try:
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses(["LArm", "RArm"], 1.0)
+                
+                # Define the arm positions
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw",
+                         "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw"]
+                
+                # Angles for both arms extended with palms down
+                angles = [0.4, -0.3, 1.5, 0.1, 0.0,  # Right arm
+                          0.4, 0.3, -1.5, -0.1, 0.0]  # Left arm
+                
+                # Set arms position with a smooth motion
+                self.motion.setAngles(names, angles, 0.2)
+                
+                self.logger.info("Hands out palms down performed")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error performing hands out palms down: {}".format(e))
+            return False
+    
+    def right_hand_palm_out(self):
+        """Raise right hand with palm forward (confident gesture)"""
+        try:
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses("RArm", 1.0)
+                
+                # Define the arm positions
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                
+                # Angles for palm-forward raised hand
+                angles = [0.3, -0.3, 0.0, 0.5, 0.0]  # Adjusted to have palm facing forward
+                
+                # Set arm position with a smooth motion
+                self.motion.setAngles(names, angles, 0.2)
+                
+                self.logger.info("Right hand raised palm forward")
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error raising right hand palm forward: {}".format(e))
+            return False
+    
+    def red_eyes_slash_throat(self):
+        """Makes eyes red and performs a throat-slash gesture"""
+        try:
+            # Set eyes to red
+            if self.leds:
+                self.leds.fadeRGB("FaceLeds", 1.0, 0.0, 0.0, 0.5)  # Red color
+            
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses("RArm", 1.0)
+                
+                # Define the arm positions for the throat-slash gesture
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                
+                # Start position - arm out to the side
+                angles1 = [0.5, -0.8, 1.5, 0.1, 0.0]
+                self.motion.setAngles(names, angles1, 0.3)
+                time.sleep(0.5)
+                
+                # Slash motion - move arm across body at neck level
+                angles2 = [0.5, 0.5, 0.0, 0.1, 0.0]
+                self.motion.setAngles(names, angles2, 0.5)  # Faster speed for dramatic effect
+                
+                self.logger.info("Red eyes and throat-slash gesture performed")
+                time.sleep(1.0)
+                
+                # Reset eyes after a moment
+                if self.leds:
+                    self.leds.fadeRGB("FaceLeds", 1.0, 1.0, 1.0, 0.5)  # Back to white
+                
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error performing red eyes slash throat: {}".format(e))
+            return False
+    
+    def hand_reach_bow(self):
+        """Green eyes, hand reaching out and bowing in reverence"""
+        try:
+            # Set eyes to green
+            if self.leds:
+                self.leds.fadeRGB("FaceLeds", 0.0, 1.0, 0.0, 0.5)  # Green color
+            
+            if self.motion:
+                # Make sure the robot is stiffened
+                self.motion.setStiffnesses(["Body"], 1.0)
+                
+                # First, reach out with hand
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                angles = [0.3, -0.3, 1.5, 0.5, 0.0]
+                self.motion.setAngles(names, angles, 0.2)
+                time.sleep(1.0)
+                
+                # Then perform a bow
+                names = ["HeadPitch", "HipPitch"]
+                angles = [0.5, 0.3]  # Bow head and torso forward
+                self.motion.setAngles(names, angles, 0.2)
+                time.sleep(2.0)
+                
+                # Return to standing position
+                self.posture.goToPosture("Stand", 0.8)
+                
+                self.logger.info("Hand reach and bow performed with green eyes")
+                time.sleep(1.0)
+                
+                # Reset eyes after gesture
+                if self.leds:
+                    self.leds.fadeRGB("FaceLeds", 1.0, 1.0, 1.0, 0.5)  # Back to white
+                
+                return True
+            else:
+                return False
+        except Exception as e:
+            self.logger.error("Error performing hand reach and bow: {}".format(e))
+            return False
+
     def raise_arm(self):
         """Raise the right arm in a gesture while speaking"""
         try:
@@ -134,14 +374,10 @@ class MyClass(GeneratedClass):
                 # Make sure the robot is stiffened
                 self.motion.setStiffnesses("RArm", 1.0)
                 
-                # Define the arm positions (right shoulder pitch, right shoulder roll, right elbow yaw, right elbow roll, right wrist yaw)
-                # These angles create a raised arm gesture
+                # Define the arm positions
                 names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
                 
-                # Angles for raised arm position (in radians)
-                # Shoulder pitch: lower values lift the arm upward
-                # Shoulder roll: negative values move arm outward
-                # Elbow roll: controls the bending of the elbow
+                # Angles for raised arm position
                 angles = [0.5, -0.2, 1.0, 0.5]  # Raised arm position
                 
                 # Set arm to raised position with a smooth motion
@@ -262,18 +498,6 @@ class MyClass(GeneratedClass):
         except Exception as e:
             self.logger.error("Error playing audio file: {}".format(e))
 
-    def robot_gesture(self, gesture_name):
-        """Execute a gesture/animation on the robot"""
-        try:
-            if self.animation:
-                if self.animation.hasAnimation(gesture_name):
-                    self.animation.run(gesture_name)
-                    self.logger.info("Robot performed gesture: {}".format(gesture_name))
-                else:
-                    self.logger.warning("Unknown gesture: {}".format(gesture_name))
-        except Exception as e:
-            self.logger.error("Error in robot_gesture: {}".format(e))
-
     def robot_posture(self, posture_name):
         """Set robot to a specific posture"""
         try:
@@ -341,3 +565,209 @@ class MyClass(GeneratedClass):
         # Wait for listening thread to finish if it's running
         if self.listening_thread and self.listening_thread.is_alive():
             self.listening_thread.join(timeout=1.0)
+            
+    def robot_gesture(self, gesture_name):
+        # Execute a gesture based on the received command
+        try:
+            # # First check if it's a built-in animation
+            # if self.animation and self.animation.hasAnimation(gesture_name):
+            #     self.animation.run(gesture_name)
+            #     self.logger.info("Robot performed built-in animation: {}".format(gesture_name))
+            #     return
+            
+            # Otherwise, check for our custom gestures
+            # Parse multiple gestures separated by commas
+            gesture_name = gesture_name.strip()
+            self.logger.info("Received gesture command: {}".format(gesture_name))
+        
+        # Check if the gesture contains the word "gesture:" erroneously
+            if "gesture:" in gesture_name:
+            # Fix the problem by splitting and taking the part after "gesture:"
+                parts = gesture_name.split("gesture:")
+                if len(parts) > 1:
+                    gesture_name = parts[1]
+                    self.logger.info("Fixed gesture command to: {}".format(gesture_name))
+            
+            gestures = gesture_name.split(',')
+            for gesture in gestures:
+                gesture = gesture.strip()
+                self.logger.info("Received gesture: {}\n".format(gesture))
+                # Map gesture name to function
+                if gesture == "military_salute":
+                    self.military_salute()
+                elif gesture == "head_tilt_forward":
+                    self.head_tilt_forward()
+                elif gesture == "raise_right_hand_palm_up":
+                    self.raise_right_hand_palm_up()
+                elif gesture == "lower_hand":
+                    self.lower_arm()
+                elif gesture == "head_tilt_right":
+                    self.motion.setAngles(["HeadYaw"], [0.3], 0.2)
+                elif gesture == "raise_arms_split_diagonally":
+                    # Raise both arms and split diagonally
+                    names = ["RShoulderPitch", "RShoulderRoll", "LShoulderPitch", "LShoulderRoll"]
+                    angles = [0.3, -0.3, 0.3, 0.3]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "head_nod_down":
+                    self.motion.setAngles(["HeadPitch"], [0.2], 0.2)
+                elif gesture == "arm_circular_motion":
+                    # Simplified circular motion 
+                    self.motion.setAngles(["RShoulderPitch", "RShoulderRoll"], [0.4, -0.3], 0.2)
+                    time.sleep(0.5)
+                    self.motion.setAngles(["RShoulderPitch", "RShoulderRoll"], [0.4, 0.0], 0.2)
+                    time.sleep(0.5)
+                    self.motion.setAngles(["RShoulderPitch", "RShoulderRoll"], [0.4, 0.3], 0.2)
+                elif gesture == "hands_fold_chest":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.4, -0.2, 0.5, 1.0, 0.4, 0.2, -0.5, -1.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "lean_forward":
+                    self.motion.setAngles(["HipPitch"], [0.2], 0.2)
+                elif gesture == "head_lower":
+                    self.motion.setAngles(["HeadPitch"], [0.3], 0.2)
+                elif gesture == "raise_right_arm_press_down":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                    angles = [0.3, -0.3, 1.5, 0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "pull_arm_back":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                    angles = [1.0, -0.1, 1.5, 0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "right_hand_chest":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                    angles = [0.7, -0.2, 1.5, 0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "nod_firmly":
+                    self.motion.setAngles(["HeadPitch"], [0.3], 0.3)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["HeadPitch"], [0.0], 0.3)
+                elif gesture == "head_tilt_up":
+                    self.head_tilt_up()
+                elif gesture == "hands_out_palms_down":
+                    self.hands_out_palms_down()
+                elif gesture == "head_nod":
+                    self.motion.setAngles(["HeadPitch"], [0.2], 0.2)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["HeadPitch"], [0.0], 0.2)
+                elif gesture == "finger_extend":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"]
+                    angles = [0.5, -0.3, 1.5, 0.5, 0.6]  # Hand slightly open with index extended
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "arms_fold_chest":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.7, -0.2, 0.5, 1.0, 0.7, 0.2, -0.5, -1.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "shoulder_lift":
+                    # Approximate shoulder lift
+                    self.motion.setAngles(["RShoulderPitch", "LShoulderPitch"], [1.2, 1.2], 0.2)
+                elif gesture == "hand_wave_dismissive":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                    angles = [0.5, -0.3, 0.0, 0.5, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["RWristYaw"], [0.5], 0.3)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["RWristYaw"], [-0.5], 0.3)
+                elif gesture == "arm_sweep_outward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw"]
+                    angles = [0.5, -0.6, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "stand_tall":
+                    self.posture.goToPosture("Stand", 0.8)
+                elif gesture == "wide_stance":
+                    self.wide_stance()
+                elif gesture == "right_hand_palm_out":
+                    self.right_hand_palm_out()
+                elif gesture == "hands_together_chest":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.7, -0.1, 0.0, 1.0, 0.7, 0.1, 0.0, -1.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "fist_to_chest":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"]
+                    angles = [0.7, -0.2, 1.5, 1.0, 0.0]  # Hand closed for fist
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "palms_down_stabilize":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.4, -0.3, 0.0, 0.5, 0.4, 0.3, 0.0, -0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "forward_lean":
+                    self.motion.setAngles(["HipPitch"], [0.2], 0.2)
+                elif gesture == "hand_chop_vertical":
+                    names = ["LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw"]
+                    angles = [0.4, 0.3, -1.5, -1.0, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["LShoulderPitch"], [0.7], 0.3)
+                elif gesture == "point_forward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"]
+                    angles = [0.4, -0.1, 0.0, 0.5, 0.6]  # Hand slightly open for pointing
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "arms_lower_slowly":
+                    names = ["RShoulderPitch", "LShoulderPitch"]
+                    angles = [1.4, 1.4]
+                    self.motion.setAngles(names, angles, 0.1)  # Slow speed
+                elif gesture == "gentle_hand_wave":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RWristYaw"]
+                    angles = [0.4, -0.2, 0.0, 0.5, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["RWristYaw"], [0.3], 0.2)
+                    time.sleep(0.3)
+                    self.motion.setAngles(["RWristYaw"], [-0.3], 0.2)
+                elif gesture == "left_hand_palm_outward":
+                    names = ["LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw"]
+                    angles = [0.4, 0.3, -0.5, -0.5, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "neutral_posture":
+                    self.posture.goToPosture("Stand", 0.5)
+                elif gesture == "hands_present_forward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.4, -0.2, 0.0, 0.5, 0.4, 0.2, 0.0, -0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "right_hand_upward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                    angles = [0.2, -0.2, 0.0, 0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "horizontal_arc":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll"]
+                    angles = [0.5, -0.5, 0.0, 0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                    time.sleep(0.5)
+                    self.motion.setAngles(["RShoulderRoll"], [0.2], 0.2)
+                elif gesture == "head_tilt":
+                    self.motion.setAngles(["HeadYaw"], [0.2], 0.2)
+                elif gesture == "hands_inward_precise":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                    angles = [0.5, -0.1, 0.5, 0.5, 0.5, 0.1, -0.5, -0.5]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "hands_motion_forward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw",
+                            "LShoulderPitch", "LShoulderRoll", "LElbowYaw"]
+                    angles = [0.4, -0.2, 0.0, 0.4, 0.2, 0.0]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "right_hand_rise":
+                    names = ["RShoulderPitch", "RShoulderRoll"]
+                    angles = [0.3, -0.2]
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "finger_point_forward":
+                    names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll", "RHand"]
+                    angles = [0.3, -0.1, 0.0, 0.5, 0.6]  # Hand partly open for pointing
+                    self.motion.setAngles(names, angles, 0.2)
+                elif gesture == "hand_reach_bow":
+                    self.hand_reach_bow()
+                elif gesture == "red_eyes_slash_throat":
+                    self.red_eyes_slash_throat()
+                else:
+                    self.logger.warning("Unknown gesture: {}".format(gesture))
+                    
+                # Add a small delay between sequential gestures
+                time.sleep(1)
+                
+        except Exception as e:
+            self.logger.error("Error in robot_gesture: {}".format(e))
