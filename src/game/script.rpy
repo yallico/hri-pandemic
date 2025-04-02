@@ -551,7 +551,7 @@ label show_choices:
     else:
         "Error loading log data."
     
-    call nao_disconnect
+    $ nao_disconnect()
     
     return
 
