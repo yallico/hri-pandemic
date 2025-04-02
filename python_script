@@ -5,6 +5,7 @@ import almath
 import threading
 import os
 import random
+import threading 
 
 class MyClass(GeneratedClass):
     def __init__(self):
@@ -470,9 +471,9 @@ class MyClass(GeneratedClass):
         """Play a pre-existing wav file"""
         try:
             if self.audio_player:
-                # Raise arm as a gesture while speaking
-                arm_raised = self.raise_arm()
-                
+                if "gesture:" in file_path:
+                    file_path = file_path.split("gesture:")[0].strip()
+                    self.logger.info("Cleaned audio file path: {}".format(file_path))
                 # If file_path doesn't contain a directory, assume it's in the audio_directory
                 if "/" not in file_path:
                     file_path = os.path.join(self.audio_directory, file_path)
@@ -482,17 +483,23 @@ class MyClass(GeneratedClass):
                     self.logger.error("Audio file not found: {}".format(file_path))
                     return
                 
-                # Play the audio file
-                audio_id = self.audio_player.playFile(file_path)
-                self.logger.info("Playing audio file: {} (ID: {})".format(file_path, audio_id))
+                # Extract the message key from the file name (without extension)
+                message_key = os.path.splitext(os.path.basename(file_path))[0]
+            
+                # Create a thread for audio playback
+                def play_audio():
+                    try:
+                        audio_id = self.audio_player.playFile(file_path)
+                        self.logger.info("Playing audio file: {} (ID: {})".format(file_path, audio_id))
+                    except Exception as e:
+                        self.logger.error("Error in audio playback thread: {}".format(e))
                 
-                # Wait for an estimated duration (could be improved with a callback)
-                # For pre-recorded files, we'll wait a fixed time then check if it's done
-                time.sleep(2.0)  # Wait 2 seconds by default
+                # Start audio playback in a separate thread
+                audio_thread = threading.Thread(target=play_audio)
+                audio_thread.daemon = True
+                audio_thread.start()
                 
                 # Lower arm after speaking
-                if arm_raised:
-                    self.lower_arm()
             else:
                 self.logger.error("AudioPlayer service not available")
         except Exception as e:
@@ -767,7 +774,7 @@ class MyClass(GeneratedClass):
                     self.logger.warning("Unknown gesture: {}".format(gesture))
                     
                 # Add a small delay between sequential gestures
-                time.sleep(1)
+                time.sleep(0.5)
                 
         except Exception as e:
             self.logger.error("Error in robot_gesture: {}".format(e))

@@ -233,8 +233,7 @@ init python:
         if study_type.upper() == "CONTROL":
             if message_key in nao_gesture_control:
                 gesture = nao_gesture_control[message_key]
-                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
-                time.sleep(0.5)  
+                
                 robotcontrol.robot_server.send_command(f"gesture:{gesture}")
         elif study_type.upper() == "RISK":
             # For RISK, we use either Risk A or Risk B gestures
@@ -248,7 +247,6 @@ init python:
             
             if message_key in gesture_map:
                 gesture = gesture_map[message_key]
-                time.sleep(0.5)
                 robotcontrol.robot_server.send_command(f"gesture:{gesture}")
     
     def nao_disconnect():
