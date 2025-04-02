@@ -346,8 +346,8 @@ class MyClass(GeneratedClass):
                 time.sleep(1.0)
                 
                 # Then perform a bow
-                names = ["HeadPitch", "HipPitch"]
-                angles = [0.5, 0.3]  # Bow head and torso forward
+                names = ["HeadPitch", "LHipPitch", "RHipPitch"]
+                angles = [0.5, 0.3, 0.3]  # Bow head and torso forward
                 self.motion.setAngles(names, angles, 0.2)
                 time.sleep(2.0)
                 
@@ -576,11 +576,6 @@ class MyClass(GeneratedClass):
     def robot_gesture(self, gesture_name):
         # Execute a gesture based on the received command
         try:
-            # # First check if it's a built-in animation
-            # if self.animation and self.animation.hasAnimation(gesture_name):
-            #     self.animation.run(gesture_name)
-            #     self.logger.info("Robot performed built-in animation: {}".format(gesture_name))
-            #     return
             
             # Otherwise, check for our custom gestures
             # Parse multiple gestures separated by commas
@@ -630,7 +625,7 @@ class MyClass(GeneratedClass):
                     angles = [0.4, -0.2, 0.5, 1.0, 0.4, 0.2, -0.5, -1.0]
                     self.motion.setAngles(names, angles, 0.2)
                 elif gesture == "lean_forward":
-                    self.motion.setAngles(["HipPitch"], [0.2], 0.2)
+                    self.motion.setAngles(["LHipPitch", "RHipPitch"], [0.2, 0.2], 0.2)
                 elif gesture == "head_lower":
                     self.motion.setAngles(["HeadPitch"], [0.3], 0.2)
                 elif gesture == "raise_right_arm_press_down":
@@ -702,7 +697,7 @@ class MyClass(GeneratedClass):
                     angles = [0.4, -0.3, 0.0, 0.5, 0.4, 0.3, 0.0, -0.5]
                     self.motion.setAngles(names, angles, 0.2)
                 elif gesture == "forward_lean":
-                    self.motion.setAngles(["HipPitch"], [0.2], 0.2)
+                    self.motion.setAngles(["LHipPitch", "RHipPitch"], [0.2, 0.2], 0.2)
                 elif gesture == "hand_chop_vertical":
                     names = ["LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll", "LWristYaw"]
                     angles = [0.4, 0.3, -1.5, -1.0, 0.0]
