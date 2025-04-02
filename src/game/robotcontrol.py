@@ -190,8 +190,8 @@ audio_file_map_risk = {
     "turn_5_unequal": "turn5_unequal.wav",
     
     # Final turn responses
-    "W": "final_win.wav",
-    "L": "final_lose.wav"
+    "W": "win.wav",
+    "L": "lose.wav"
 }
 
 audio_file_map_control = {
@@ -219,8 +219,8 @@ audio_file_map_control = {
     "turn_5_unequal": "turn-5-control-group.wav",
     
     # Final turn responses
-    "W": "final_win.wav",
-    "L": "final_lose.wav"
+    "W": "win.wav",
+    "L": "lose.wav"
 }
 
 

@@ -20,7 +20,7 @@ class MyClass(GeneratedClass):
         self.tts = None
         self.animation = None
         self.audio_player = None
-        self.audio_directory = "../audio_files/"  # Directory to store audio files on NAO
+        self.audio_directory = "./audio_files/"  # Directory to store audio files on NAO
         self.leds = None
 
     def onLoad(self):
@@ -53,6 +53,7 @@ class MyClass(GeneratedClass):
 
     def connect_to_server(self):
         # Connection parameters
+        #Luis IP host = '169.254.38.182'
         host = '127.0.0.1'  # change to your laptop's IP address when running real robot
         port = 8888         # Make sure this matches the renpy server port
 
