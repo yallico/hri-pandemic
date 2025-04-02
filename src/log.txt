@@ -1,38 +1,13 @@
-2025-03-28 16:02:25 UTC
+2025-04-02 11:54:22 UTC
 Linux-6.8.9-100.fc38.x86_64-x86_64-with-glibc2.37
 Ren'Py 8.3.4.24120703
 
 Early init took 0.06s
 Loading error handling took 0.04s
-Loading script took 0.36s
+Loading script took 0.21s
 Loading save slot metadata took 0.04s
 Loading persistent took 0.00s
-
-File "game/screens.rpy", line 1703: 'size' is not a keyword argument or valid child of the textbutton statement.
-    textbutton "Close" action Return() size 20 xalign 1.0
-                                           ^
-DPI scale factor: 1.000000
-Interface start took 0.22s
-
-Initializing gl2 renderer:
-primary display bounds: (0, 0, 1920, 1080)
-swap interval: 1 frames
-Windowed mode.
-Vendor: "b'Intel'"
-Renderer: b'Mesa Intel(R) HD Graphics 5500 (BDW GT2)'
-Version: b'4.6 (Compatibility Profile) Mesa 23.1.9'
-Display Info: None
-Screen sizes: virtual=(1920, 1080) physical=(1739, 978) drawable=(1739, 978)
-Maximum texture size: 4096x4096
-Screen sizes: virtual=(1920, 1080) physical=(1920, 1011) drawable=(1920, 1011)
-Maximum texture size: 4096x4096
-Resetting cache.
-Early init took 25.63s
-Loading error handling took 0.03s
-Loading script took 0.38s
-Loading save slot metadata took 0.02s
-Loading persistent took 0.00s
-Running init code took 0.14s
+Running init code took 0.13s
 Loading analysis data took 0.02s
 Analyze and compile ATL took 0.00s
 Reloading save slot metadata took 0.02s
@@ -49,12 +24,12 @@ Init translation took 0.05s
 Build styles took 0.00s
 Load screen analysis took 0.00s
 Analyze screens took 0.02s
-Save screen analysis took 0.02s
-Prepare screens took 0.09s
-Save pyanalysis. took 0.02s
+Save screen analysis took 0.03s
+Prepare screens took 0.10s
+Save pyanalysis. took 0.00s
 Save bytecode. took 0.03s
 Running _start took 0.00s
-Interface start took 0.08s
+Interface start took 0.16s
 
 Initializing gl2 renderer:
 primary display bounds: (0, 0, 1920, 1080)
@@ -64,14 +39,10 @@ Vendor: "b'Intel'"
 Renderer: b'Mesa Intel(R) HD Graphics 5500 (BDW GT2)'
 Version: b'4.6 (Compatibility Profile) Mesa 23.1.9'
 Display Info: None
-Screen sizes: virtual=(1920, 1080) physical=(1920, 1011) drawable=(1920, 1011)
+Screen sizes: virtual=(1920, 1080) physical=(1739, 978) drawable=(1739, 978)
 Maximum texture size: 4096x4096
 Screen sizes: virtual=(1920, 1080) physical=(1920, 1011) drawable=(1920, 1011)
 Maximum texture size: 4096x4096
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.01s
-Load screen analysis took 0.06s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
+Robot server started on 0.0.0.0:8888
+
+No robot connected. Command not sent.

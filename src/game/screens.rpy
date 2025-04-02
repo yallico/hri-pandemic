@@ -1833,3 +1833,22 @@ screen godspeed_questionnaire(question, storevar):
             for i in range(1, 6):
                 textbutton str(i) action [SetVariable(storevar, i), Return()]
             text question["end"] xalign 1.0 size 24
+
+################################################################################
+## End Game Feedback Questionnaire
+################################################################################
+
+screen end_game_feedback_questionnaire(qtext, storevar):
+    modal True
+    tag questionnaire
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20, 20, 20)
+        has vbox
+        text qtext xalign 0.5 size 34
+        input:
+            value VariableInputValue(storevar)
+            length 500
+            multiline True
+        textbutton "Submit" action Return() sensitive (getattr(store, storevar) != "")

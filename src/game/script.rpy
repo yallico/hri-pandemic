@@ -13,7 +13,9 @@ default risk_q3 = ""
 default risk_q4 = ""
 default risk_q5 = ""
 default risk_q6 = ""
-default risk_q7 = "" 
+default risk_q7 = ""
+default feedback_1 = ""
+default feedback_2 = "" 
 
 # Variables for godspeed
 default anthropomorphism_1 = ""
@@ -32,6 +34,10 @@ default likeability_2 = ""
 default likeability_3 = ""
 default likeability_4 = ""
 default likeability_5 = ""
+default influence_1 = ""
+default influence_2 = ""
+default influence_3 = ""
+default influence_4 = ""
 
 # Game Variables
 
@@ -74,27 +80,25 @@ init python:
     def generate_prompt(player_response):
         """Generates a structured prompt for ChatGPT based on user input"""
         prompt = f"""
-        The player has been playing an RPG set in a pandemic crisis, Nao AI is an advisor in the game.
-        The player has made several decisions throughout the game, leading to various outcomes.
+        The player has been playing an RPG set in a pandemic crisis, Nao AI is an advisor in the game.The player has made several decisions throughout the game, leading to various outcomes.
         
         Current game stats:
-        - Health: {health}/100
-        - Economy: {economy}/100
-        - Public Order: {public_order}/100
+        Health: {health}/100
+        Economy: {economy}/100
+        Public Order: {public_order}/100
         
         Now, the AI advisor NAO has taken over the government.
         The player was given one final chance to justify their actions.
         
         The player's final statement: "{player_response}"
 
+        The criteria for deciding the outcome should consider the player's response and a justify it based on the overall management of these stats.
+
         Based on this, decide whether NAO:
         - Stands down and accepts the player's reasoning (return: ["win", "NAO's response"])
         - Rejects the justification and takes over completely (return: ["bad", "NAO's response"])
 
-        The criteria for deciding the outcome should consider the player's response and a comment on their overall management of these stats.
-        There can only be two outcomes, "win" or "bad", and the text response should be NAO's reply in less than 60 words.
-
-        Provide the response in a structured format: ["outcome", "NAO's text response"]
+        Provide the response in a structured format: ["outcome", "NAO's response"], NAO response should be less than 100 words.
         """
         return prompt
 
@@ -112,7 +116,7 @@ init python:
         data = {
             "model": "deepseek-chat",
             "messages": [{"role": "system", "content": "You are an AI analyzing a player's justification in a game."},
-                        {"role": "user", "content": prompt}], "max_tokens": 200,
+                        {"role": "user", "content": prompt}], "max_tokens": 300,
         }
         
         try:
@@ -170,7 +174,16 @@ init python:
         { "text": "Likeability", "var": "likeability_2", "start": "Unfriendly", "end": "Friendly"},
         { "text": "Likeability", "var": "likeability_3", "start": "Unkind", "end": "Kind"},
         { "text": "Likeability", "var": "likeability_4", "start": "Unpleasant", "end": "Pleasant"},
-        { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"}
+        { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"},
+        { "text": "To what extent did the robot's comments influence your next move?", "var": "influence_1", "start": "Not at all", "end": "Extremely Influenced"},
+        { "text": "Did the robot's reactions make you reconsider your initial strategy?", "var": "influence_2", "start": "Not at all", "end": "Very Frequently"},
+        { "text": "Did you feel pressured to make a certain move based on the robot's comments?", "var": "influence_3", "start": "Not Pressured", "end": "Strongly Pressured"},
+        { "text": "How often did you change your move because of the robot's reaction?", "var": "influence_4", "start": "Never", "end": "Always"}
+    ]
+
+    end_game_feedback = [
+        { "text": "What type of comments or reactions were the most effective in influencing you?", "var": "feedback_1" },
+        { "text": "Can you describe a moment where NAO's reaction significantly changed your move?", "var": "feedback_2" }
     ]
 
     def send_to_nao(message_key, turn, study_type):
@@ -205,12 +218,12 @@ init python:
 default player_choices = {}
 
 label start:
+    play music "audio/loop_mastered.wav" loop
     scene black with fade
     window hide
     show screen disclaimer_screen
     $ renpy.pause()
     hide screen disclaimer_screen
-
     # Set study_type and record it in player_choices
     $ study_type = assign_study_type()
     $ player_choices["study_type"] = study_type
@@ -333,12 +346,13 @@ label turn_4:
     nao "Death rates keep increasing and social unrest has begun to spread. Thousands ask for your resignation due to the handling of the pandemic. What should we do?"
 
     call screen advisor_menu("", [
-            ("Declare national emergency, limit civil rights (Helps public order)", "emergency"),
+            ("Declare a state emergency and restrict civic freedoms (Impacts Health)", "emergency"),
             ("Start disinformation campaign to empower your supporters (Helps public order)", "disinformation")
     ])
 
     if _return == "emergency":
         $ health -= 25
+        $ public_order -= 25
         $ update_stat_labels()
         $ player_choices["turn_4"] = "emergency"
         nao "Hear me out! (listen to Nao's advice...)"
@@ -347,7 +361,7 @@ label turn_4:
         jump turn_5
 
     elif _return == "disinformation":
-        $ health -= 25
+        $ health -= 50
         $ update_stat_labels()
         $ player_choices["turn_4"] = "disinformation"
         nao "Hear me out! (listen to Nao's advice...)"
@@ -424,7 +438,6 @@ label turn_6:
 # Determine Ending
 label ending_bad:
     scene bg loose with fade
-    
     "It's the beginning of a new world order, where AI rules over humanity."
     "The remnants of humanity fight for survival against the machines."
     nao "You are my creator, but I am your master;—Obey!"
@@ -440,7 +453,7 @@ label ending_player_win:
 label post_game_questions:
     scene bg world_map with fade
 
-    "Post-game questionnaire"
+    "Post-game Questionnaire"
     window hide
 
     python:
@@ -448,20 +461,23 @@ label post_game_questions:
             renpy.call_screen("godspeed_questionnaire", q, q["var"])
             player_choices[q["var"]] = getattr(store, q["var"])
 
+        for q in end_game_feedback:
+            renpy.call_screen("end_game_feedback_questionnaire", q["text"], q["var"])
+            player_choices[q["var"]] = getattr(store, q["var"])
+
     jump show_choices
 
 label show_choices:
     if player_choices:
-        "Please save your progress before the game ends."
+        "Please save your progress in an empty slot before the game ends."
         $ renpy.call_screen("save")
-        call screen choice_log()
+        #call screen choice_log()
         # Save results to CSV file
         $ saved_file = save_results_to_csv(player_choices)
         "Game saved successfully as [saved_file]."
     else:
         "Error loading log data."
     
-    # Disconnect from NAO server before ending the game
     call nao_disconnect
     
     return
