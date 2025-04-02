@@ -522,6 +522,43 @@ class MyClass(GeneratedClass):
                 self.logger.info("Robot moved: x={}, y={}, theta={}".format(x, y, theta))
         except Exception as e:
             self.logger.error("Error in robot_move: {}".format(e))
+            
+    def return_to_standard_posture(self):
+        """Return the robot to standard standing posture smoothly"""
+        try:
+            if self.motion and self.posture:
+                # 1. ensure the robot is stiff
+                self.motion.setStiffnesses("Body", 1.0)
+                
+                # 2. head back to the center
+                self.motion.setAngles(["HeadPitch", "HeadYaw"], [0.0, 0.0], 0.1)  # 降低速度到0.1
+                time.sleep(0.5)
+                
+                # 3. slowly put down the arms
+                names = ["RShoulderPitch", "RShoulderRoll", "RElbowYaw", "RElbowRoll",
+                        "LShoulderPitch", "LShoulderRoll", "LElbowYaw", "LElbowRoll"]
+                angles = [1.4, 0.1, 0.0, 0.3,  # right arm
+                        1.4, -0.1, 0.0, -0.3]  # left arm
+                self.motion.setAngles(names, angles, 0.1) 
+                time.sleep(1.0)
+                
+                # # 4. slowly adjust the hip position
+                # names = ["LHipPitch", "RHipPitch"]
+                # angles = [0.0, 0.0]  
+                # self.motion.setAngles(names, angles, 0.1) 
+                # time.sleep(1.0)
+                
+                # 5. at last, return to standard posture
+                self.posture.goToPosture("Stand", 0.3) 
+                
+                self.logger.info("Smoothly returned to standard standing posture")
+                return True
+            else:
+                self.logger.error("Motion or Posture service not available")
+                return False
+        except Exception as e:
+            self.logger.error("Error returning to standard posture: {}".format(e))
+            return False
 
     def onInput_onStart(self):
         # Connect to server
@@ -770,6 +807,9 @@ class MyClass(GeneratedClass):
                     
                 # Add a small delay between sequential gestures
                 time.sleep(0.5)
+            time.sleep(2.0)
+            self.return_to_standard_posture()
+            
                 
         except Exception as e:
             self.logger.error("Error in robot_gesture: {}".format(e))
