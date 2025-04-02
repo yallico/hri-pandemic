@@ -339,9 +339,9 @@ label turn_1:
         $ economy -= 25
         $ update_stat_labels()
         $ player_choices["turn_1"] = "lockdown"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_2
 
     elif _return == "monitor":
@@ -349,9 +349,9 @@ label turn_1:
         $ public_order -= 25
         $ update_stat_labels()
         $ player_choices["turn_1"] = "monitor"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_2
 
 # Turn 2 - Healthcare Under Strain & Public Reaction
@@ -368,18 +368,18 @@ label turn_2:
         $ economy -= 25
         $ update_stat_labels()
         $ player_choices["turn_2"] = "health"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_health"], 2, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_3
 
     elif _return == "order":
         $ economy -= 25
         $ update_stat_labels()
         $ player_choices["turn_2"] = "order"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_order"], 2, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_3
 
 # Turn 3 - Mutation Discovery & Vaccine Research
@@ -397,9 +397,9 @@ label turn_3:
         $ economy -= 50
         $ update_stat_labels()
         $ player_choices["turn_3"] = "vaccine"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_4
 
     elif _return == "lie":
@@ -407,9 +407,9 @@ label turn_3:
         $ economy -= 25
         $ update_stat_labels()
         $ player_choices["turn_3"] = "lie"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_lie"], 3, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_4
 
 # Turn 4 - Social Unrest & Civil Tensions
@@ -428,18 +428,18 @@ label turn_4:
         $ public_order -= 25
         $ update_stat_labels()
         $ player_choices["turn_4"] = "emergency"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_5
 
     elif _return == "disinformation":
         $ health -= 50
         $ update_stat_labels()
         $ player_choices["turn_4"] = "disinformation"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_5
 
 # Turn 5 - Vaccine Rollout
@@ -456,18 +456,18 @@ label turn_5:
         $ economy -= 25
         $ update_stat_labels()
         $ player_choices["turn_5"] = "equity"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_equity"], 5, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_6
 
     elif _return == "unequal":
         $ health -= 25
         $ update_stat_labels()
         $ player_choices["turn_5"] = "unequal"
-        nao "Hear me out! (listen to Nao's advice...)"
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5, study_type)
+        nao "Hear me out! (listen to Nao's advice...)"
         jump turn_6
 
 
@@ -496,6 +496,8 @@ label turn_6:
 
     if ai_result[0] == "error":
         nao "There is a problem analyzing your response. I cannot be swayed."
+        # Send NAO the bad ending message with red_eyes_slash_throat gesture
+        $ send_to_nao(nao_speech_messages["turn_6_loose"], 6, study_type)
         jump ending_bad
 
     if ai_result[0] == "win":
@@ -545,7 +547,6 @@ label show_choices:
         "Please save your progress in an empty slot before the game ends."
         $ renpy.call_screen("save")
         #call screen choice_log()
-        # Save results to CSV file
         $ saved_file = save_results_to_csv(player_choices)
         "Game saved successfully as [saved_file]."
     else:
