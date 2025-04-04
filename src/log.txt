@@ -1,17 +1,18 @@
-2025-04-02 18:27:23 UTC
+2025-04-04 09:50:37 UTC
 Windows-10-10.0.22000
 Ren'Py 8.3.7.25031702
 
-Early init took 0.12s
+Early init took 0.11s
 Loading error handling took 0.05s
-Loading script took 0.19s
+Loading script took 0.55s
 Loading save slot metadata took 0.06s
 Loading persistent took 0.00s
-Running init code took 0.28s
-Loading analysis data took 0.08s
+Running init code took 0.25s
+Loading analysis data took 0.03s
 Analyze and compile ATL took 0.00s
-Reloading save slot metadata took 0.08s
+Reloading save slot metadata took 0.03s
 Index archives took 0.00s
+Backing up script files to 'C:\\Users\\yalli\\AppData\\Roaming/RenPy/backups\\src':
 Dump and make backups took 0.00s
 Cleaning cache took 0.00s
 Making clean stores took 0.00s
@@ -23,14 +24,14 @@ Creating interface object took 0.00s
 Cleaning stores took 0.00s
 Init translation took 0.00s
 Build styles took 0.00s
-Load screen analysis took 0.05s
-Analyze screens took 0.00s
-Save screen analysis took 0.00s
-Prepare screens took 0.12s
+Load screen analysis took 0.00s
+Analyze screens took 0.02s
+Save screen analysis took 0.03s
+Prepare screens took 0.11s
 Save pyanalysis. took 0.00s
-Save bytecode. took 0.00s
-Running _start took 0.02s
-Interface start took 0.55s
+Save bytecode. took 0.05s
+Running _start took 0.00s
+Interface start took 0.53s
 
 Initializing gl2 renderer:
 primary display bounds: (0, 0, 1920, 1080)
@@ -44,23 +45,14 @@ Screen sizes: virtual=(1920, 1080) physical=(1920, 991) drawable=(1920, 991)
 Maximum texture size: 4096x4096
 Screen sizes: virtual=(1920, 1080) physical=(1920, 991) drawable=(1920, 991)
 Maximum texture size: 4096x4096
+Screen sizes: virtual=(1920, 1080) physical=(1920, 1080) drawable=(1920, 1080)
+Maximum texture size: 4096x4096
 Robot server started on 0.0.0.0:8888
 No robot connected. Command not sent.
 No robot connected. Command not sent.
-No robot connected. Command not sent.
 Waiting for robot connection...
-Robot connected from ('169.254.204.138', 49212)
+Robot connected from ('169.254.34.140', 41940)
 Robot is ready to receive commands
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.00s
-Load screen analysis took 0.05s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-Sent command to robot: playaudio:init_greeting.wav
-Sent command to robot: gesture:military_salute
-Sent command to robot: gesture:military_salute
 Cleaning stores took 0.00s
 Init translation took 0.00s
 Build styles took 0.01s
@@ -70,59 +62,24 @@ Prepare screens took 0.00s
 Running _start took 0.00s
 Sent command to robot: playaudio:init_greeting.wav
 Sent command to robot: gesture:military_salute
-Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
 Cleaning stores took 0.00s
 Init translation took 0.00s
-Build styles took 0.02s
+Build styles took 0.01s
 Load screen analysis took 0.04s
 Analyze screens took 0.00s
 Prepare screens took 0.00s
 Running _start took 0.00s
 Sent command to robot: playaudio:init_greeting.wav
 Sent command to robot: gesture:military_salute
-Sent command to robot: gesture:military_salute
-Sent command to robot: playaudio:turn-1-control-group.wav
-Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
-Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
-Sent command to robot: playaudio:turn-2-control-group.wav
-Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
-Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
-Sent command to robot: playaudio:turn-3-control-group.wav
-Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
-Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
-Sent command to robot: playaudio:turn-4-control-group.wav
-Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
-Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
-Sent command to robot: playaudio:turn-5-control-group.wav
-Sent command to robot: gesture:right_hand_chest,nod_firmly
-Sent command to robot: gesture:right_hand_chest,nod_firmly
-Error in communication: [WinError 10038] An operation was attempted on something that is not a socket
-Error in communication: [WinError 10038] An operation was attempted on something that is not a socketRobot disconnected
-Robot server stopped
-Robot server stoppedRobot server stopped
-Robot server stopped completely
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.03s
-Load screen analysis took 0.04s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-Robot server started on 0.0.0.0:8888
-No robot connected. Command not sent.
-No robot connected. Command not sent.
-No robot connected. Command not sent.Waiting for robot connection...
-No robot connected. Command not sent.
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.02s
-Load screen analysis took 0.06s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-No robot connected. Command not sent.
-No robot connected. Command not sent.
-No robot connected. Command not sent.
-No robot connected. Command not sent.
-No robot connected. Command not sent.
-No robot connected. Command not sent.

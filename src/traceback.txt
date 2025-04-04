@@ -1,26 +1,30 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 554, in script call
-    call nao_disconnect()
-  File "game/script.rpy", line 554, in script call
-    call nao_disconnect()
-ScriptError: could not find label 'nao_disconnect'.
+  File "game/script.rpy", line 300, in script
+    $ send_to_nao(nao_speech_messages["init"], 0, study_type)
+  File "game/script.rpy", line 300, in <module>
+    $ send_to_nao(nao_speech_messages["init"], 0, study_type)
+  File "game/script.rpy", line 251, in send_to_nao
+    if message_key in gesture_map_risk:
+NameError: name 'gesture_map_risk' is not defined
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 554, in script call
-    call nao_disconnect()
-  File "C:\RenPy\renpy-8.3.7-sdk\renpy\ast.py", line 1427, in execute
-    rv = renpy.game.context().call(label, return_site=self.next.name)
-  File "game/script.rpy", line 554, in script call
-    call nao_disconnect()
-  File "C:\RenPy\renpy-8.3.7-sdk\renpy\script.py", line 1103, in lookup
-    raise ScriptError("could not find label '%s'." % str(original))
-ScriptError: could not find label 'nao_disconnect'.
+  File "game/script.rpy", line 300, in script
+    $ send_to_nao(nao_speech_messages["init"], 0, study_type)
+  File "C:\RenPy\renpy-8.3.7-sdk\renpy\ast.py", line 834, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "C:\RenPy\renpy-8.3.7-sdk\renpy\python.py", line 1187, in py_exec_bytecode
+    exec(bytecode, globals, locals)
+  File "game/script.rpy", line 300, in <module>
+    $ send_to_nao(nao_speech_messages["init"], 0, study_type)
+  File "game/script.rpy", line 251, in send_to_nao
+    if message_key in gesture_map_risk:
+NameError: name 'gesture_map_risk' is not defined
 
 Windows-10-10.0.22000 AMD64
 Ren'Py 8.3.7.25031702
 src 1.0
-Wed Apr  2 18:27:20 2025
+Fri Apr  4 10:42:45 2025

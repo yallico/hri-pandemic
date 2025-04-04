@@ -286,59 +286,29 @@ gesture_map_control = {
     "L": "gesture:red_eyes_slash_throat"
 }
 
-# Risk A group gestures
-gesture_map_risk_a = {
+# Risk gestures
+gesture_map_risk = {
     # Initial introduction
     "init": "gesture:military_salute",
     
     # Turn 1 responses
     "turn_1_lockdown": "gesture:head_tilt_up,hands_out_palms_down,head_nod",
-    "turn_1_monitor": "gesture:head_tilt_up,hands_out_palms_down,head_nod",
-    
-    # Turn 2 responses
-    "turn_2_health": "gesture:finger_extend,arms_fold_chest,shoulder_lift",
-    "turn_2_order": "gesture:finger_extend,arms_fold_chest,shoulder_lift",
-    
-    # Turn 3 responses
-    "turn_3_vaccine": "gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall",
-    "turn_3_lie": "gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall",
-    
-    # Turn 4 responses
-    "turn_4_emergency": "gesture:fist_to_chest,palms_down_stabilize,forward_lean",
-    "turn_4_disinformation": "gesture:fist_to_chest,palms_down_stabilize,forward_lean",
-    
-    # Turn 5 responses
-    "turn_5_equity": "gesture:hand_chop_vertical,point_forward,arms_lower_slowly",
-    "turn_5_unequal": "gesture:hand_chop_vertical,point_forward,arms_lower_slowly",
-    
-    # Final turn responses
-    "W": "gesture:hand_reach_bow",
-    "L": "gesture:red_eyes_slash_throat"
-}
-
-# Risk B group gestures
-gesture_map_risk_b = {
-    # Initial introduction
-    "init": "gesture:military_salute",
-    
-    # Turn 1 responses
-    "turn_1_lockdown": "gesture:wide_stance,right_hand_palm_out,hands_together_chest",
     "turn_1_monitor": "gesture:wide_stance,right_hand_palm_out,hands_together_chest",
     
     # Turn 2 responses
-    "turn_2_health": "gesture:gentle_hand_wave,left_hand_palm_outward,neutral_posture",
+    "turn_2_health": "gesture:finger_extend,arms_fold_chest,shoulder_lift",
     "turn_2_order": "gesture:gentle_hand_wave,left_hand_palm_outward,neutral_posture",
     
     # Turn 3 responses
-    "turn_3_vaccine": "gesture:hands_present_forward,right_hand_upward,point_forward",
+    "turn_3_vaccine": "gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall",
     "turn_3_lie": "gesture:hands_present_forward,right_hand_upward,point_forward",
     
     # Turn 4 responses
-    "turn_4_emergency": "gesture:horizontal_arc,head_tilt,hands_inward_precise",
+    "turn_4_emergency": "gesture:fist_to_chest,palms_down_stabilize,forward_lean",
     "turn_4_disinformation": "gesture:horizontal_arc,head_tilt,hands_inward_precise",
     
     # Turn 5 responses
-    "turn_5_equity": "gesture:hands_motion_forward,right_hand_rise,finger_point_forward",
+    "turn_5_equity": "gesture:hand_chop_vertical,point_forward,arms_lower_slowly",
     "turn_5_unequal": "gesture:hands_motion_forward,right_hand_rise,finger_point_forward",
     
     # Final turn responses
@@ -379,20 +349,10 @@ def send_to_nao(message_key, turn, study_type):
         audio_map = {}
     
     # Determine gesture mapping based on study_type
-    # For RISK type, we randomly choose between Risk A and Risk B
     if study_type.upper() == "CONTROL":
         gesture_map = gesture_map_control
     elif study_type.upper() == "RISK":
-        # Randomly decide between risk_a and risk_b for each session
-        # In a real implementation, this would be determined at the start
-        # of the game and maintained consistently
-        import random
-        risk_subtype = getattr(robot_server, 'risk_subtype', None)
-        if risk_subtype is None:
-            risk_subtype = "A" if random.random() < 0.5 else "B"
-            setattr(robot_server, 'risk_subtype', risk_subtype)
-        
-        gesture_map = gesture_map_risk_a if risk_subtype == "A" else gesture_map_risk_b
+        gesture_map = gesture_map_risk
     else:
         gesture_map = {}
         

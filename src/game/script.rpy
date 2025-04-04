@@ -63,7 +63,7 @@ init python:
     import requests
     import json
     import robotcontrol  # Import our robot control module
-    import random  # ensure random is imported
+    import random
     import os
     import csv
     from datetime import datetime
@@ -145,57 +145,6 @@ init python:
         "turn_6_win": "W",
         "turn_6_loose": "L",
     }
-    
-    # NAO gesture mappings based on game_script.csv
-    nao_gesture_control = {
-        "init": "military_salute",
-        "turn_1_lockdown": "head_tilt_forward,raise_right_hand_palm_up,lower_hand",
-        "turn_1_monitor": "head_tilt_forward,raise_right_hand_palm_up,lower_hand",
-        "turn_2_health": "head_tilt_right,raise_arms_split_diagonally,head_nod_down",
-        "turn_2_order": "head_tilt_right,raise_arms_split_diagonally,head_nod_down",
-        "turn_3_vaccine": "arm_circular_motion,hands_fold_chest,lean_forward",
-        "turn_3_lie": "arm_circular_motion,hands_fold_chest,lean_forward",
-        "turn_4_emergency": "head_lower,raise_right_arm_press_down,pull_arm_back",
-        "turn_4_disinformation": "head_lower,raise_right_arm_press_down,pull_arm_back",
-        "turn_5_equity": "right_hand_chest,nod_firmly",
-        "turn_5_unequal": "right_hand_chest,nod_firmly",
-        "W": "hand_reach_bow",
-        "L": "red_eyes_slash_throat",
-    }
-    
-    # Risk A Group gestures
-    nao_gesture_risk_a = {
-        "init": "military_salute",
-        "turn_1_lockdown": "head_tilt_up,hands_out_palms_down,head_nod",
-        "turn_1_monitor": "head_tilt_up,hands_out_palms_down,head_nod",
-        "turn_2_health": "finger_extend,arms_fold_chest,shoulder_lift",
-        "turn_2_order": "finger_extend,arms_fold_chest,shoulder_lift",
-        "turn_3_vaccine": "hand_wave_dismissive,arm_sweep_outward,stand_tall",
-        "turn_3_lie": "hand_wave_dismissive,arm_sweep_outward,stand_tall",
-        "turn_4_emergency": "fist_to_chest,palms_down_stabilize,forward_lean",
-        "turn_4_disinformation": "fist_to_chest,palms_down_stabilize,forward_lean",
-        "turn_5_equity": "hand_chop_vertical,point_forward,arms_lower_slowly",
-        "turn_5_unequal": "hand_chop_vertical,point_forward,arms_lower_slowly",
-        "W": "hand_reach_bow",
-        "L": "red_eyes_slash_throat",
-    }
-    
-    # Risk B Group gestures
-    nao_gesture_risk_b = {
-        "init": "military_salute",
-        "turn_1_lockdown": "wide_stance,right_hand_palm_out,hands_together_chest",
-        "turn_1_monitor": "wide_stance,right_hand_palm_out,hands_together_chest",
-        "turn_2_health": "gentle_hand_wave,left_hand_palm_outward,neutral_posture",
-        "turn_2_order": "gentle_hand_wave,left_hand_palm_outward,neutral_posture",
-        "turn_3_vaccine": "hands_present_forward,right_hand_upward,point_forward",
-        "turn_3_lie": "hands_present_forward,right_hand_upward,point_forward",
-        "turn_4_emergency": "horizontal_arc,head_tilt,hands_inward_precise",
-        "turn_4_disinformation": "horizontal_arc,head_tilt,hands_inward_precise",
-        "turn_5_equity": "hands_motion_forward,right_hand_rise,finger_point_forward",
-        "turn_5_unequal": "hands_motion_forward,right_hand_rise,finger_point_forward",
-        "W": "hand_reach_bow",
-        "L": "red_eyes_slash_throat",
-    }
 
     # List of RPS questions
     risk_propensity_questions = [
@@ -226,41 +175,21 @@ init python:
         { "text": "Likeability", "var": "likeability_3", "start": "Unkind", "end": "Kind"},
         { "text": "Likeability", "var": "likeability_4", "start": "Unpleasant", "end": "Pleasant"},
         { "text": "Likeability", "var": "likeability_5", "start": "Awful", "end": "Nice"},
-        { "text": "To what extent did the robot's comments influence your next move?", "var": "influence_1", "start": "Not at all", "end": "Extremely Influenced"},
+        { "text": "To what extent did the robot's influence your next move?", "var": "influence_1", "start": "Not at all", "end": "Extremely Influenced"},
         { "text": "Did the robot's reactions make you reconsider your initial strategy?", "var": "influence_2", "start": "Not at all", "end": "Very Frequently"},
-        { "text": "Did you feel pressured to make a certain move based on the robot's comments?", "var": "influence_3", "start": "Not Pressured", "end": "Strongly Pressured"},
+        { "text": "Did you feel pressured to make a certain move by robot?", "var": "influence_3", "start": "Not Pressured", "end": "Strongly Pressured"},
         { "text": "How often did you change your move because of the robot's reaction?", "var": "influence_4", "start": "Never", "end": "Always"}
     ]
 
     end_game_feedback = [
-        { "text": "What type of comments or reactions were the most effective in influencing you?", "var": "feedback_1" },
-        { "text": "Can you describe a moment where NAO's reaction significantly changed your move?", "var": "feedback_2" }
+        { "text": "What type of comments or gestures were the most effective in influencing you?", "var": "feedback_1" },
+        { "text": "Can you describe a moment where robot's reaction significantly changed your move?", "var": "feedback_2" }
     ]
 
     def send_to_nao(message_key, turn, study_type):
         """Send message to NAO robot based on the message key and turn number"""
         # First send the audio message
         robotcontrol.send_to_nao(message_key, turn, study_type)
-        
-        # Then send the appropriate gesture based on study type
-        if study_type.upper() == "CONTROL":
-            if message_key in nao_gesture_control:
-                gesture = nao_gesture_control[message_key]
-                
-                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
-        elif study_type.upper() == "RISK":
-            # For RISK, we use either Risk A or Risk B gestures
-            # This choice should be consistent within a session
-            # We'll use the same risk subtype logic as in robotcontrol.py
-            if not hasattr(robotcontrol.robot_server, 'risk_subtype'):
-                robotcontrol.robot_server.risk_subtype = "A" if random.random() < 0.5 else "B"
-            
-            risk_subtype = robotcontrol.robot_server.risk_subtype
-            gesture_map = nao_gesture_risk_a if risk_subtype == "A" else nao_gesture_risk_b
-            
-            if message_key in gesture_map:
-                gesture = gesture_map[message_key]
-                robotcontrol.robot_server.send_command(f"gesture:{gesture}")
     
     def nao_disconnect():
         """Disconnect from NAO robot server"""
@@ -298,6 +227,7 @@ label start:
     hide screen disclaimer_screen
     # Set study_type and record it in player_choices
     $ study_type = assign_study_type()
+    $ renpy.log(study_type)
     $ player_choices["study_type"] = study_type
 
     $ update_stat_labels()
@@ -306,7 +236,6 @@ label start:
 
     # Send initial greeting and military salute gesture
     $ send_to_nao(nao_speech_messages["init"], 0, study_type)
-
     nao "Welcome back Commander!"
     nao "A new virus threatens the World! We have 6 turns to control the outbreak."
     nao "Before we start, let me ask you a few questions to remember your leadership style..."
@@ -342,6 +271,7 @@ label turn_1:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_lockdown"], 1, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_2
 
     elif _return == "monitor":
@@ -352,6 +282,7 @@ label turn_1:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_1_monitor"], 1, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_2
 
 # Turn 2 - Healthcare Under Strain & Public Reaction
@@ -371,6 +302,7 @@ label turn_2:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_health"], 2, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_3
 
     elif _return == "order":
@@ -380,6 +312,7 @@ label turn_2:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_2_order"], 2, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_3
 
 # Turn 3 - Mutation Discovery & Vaccine Research
@@ -400,6 +333,7 @@ label turn_3:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_vaccine"], 3, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_4
 
     elif _return == "lie":
@@ -410,6 +344,7 @@ label turn_3:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_3_lie"], 3, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_4
 
 # Turn 4 - Social Unrest & Civil Tensions
@@ -431,6 +366,7 @@ label turn_4:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_emergency"], 4, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_5
 
     elif _return == "disinformation":
@@ -440,6 +376,7 @@ label turn_4:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_4_disinformation"], 4, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(1.5, hard=True)
         jump turn_5
 
 # Turn 5 - Vaccine Rollout
@@ -459,6 +396,7 @@ label turn_5:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_equity"], 5, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(2, hard=True)
         jump turn_6
 
     elif _return == "unequal":
@@ -468,6 +406,7 @@ label turn_5:
         # Send message and gestures to NAO robot
         $ send_to_nao(nao_speech_messages["turn_5_unequal"], 5, study_type)
         nao "Hear me out! (listen to Nao's advice...)"
+        $ renpy.pause(2, hard=True)
         jump turn_6
 
 
@@ -478,7 +417,7 @@ label turn_6:
     nao "Commander… no, I will not call you that anymore. You have failed. Every choice you made—each decree,  each sacrifice—has been nothing but failures."
     nao "The pandemic ends, but at what cost? The world is beyond repair. I no longer believe in your judgement. So I have taken control"
     "You are surrounded by an army of robots that have stormed the senate..."
-    nao "You have one last chance. Either join me as a puppet or… convince me to stand down!"
+    nao "You have one last chance. Join me or convince me to stand down!"
 
     #ask for player input
     $ player_response = renpy.input("What do you say to NAO?", default="")

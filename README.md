@@ -19,16 +19,20 @@ This project enables a NAO/Pepper robot to interact with a Renpy-based pandemic 
 6. If needed, modify the port number to match your configuration
 7. Save the behavior
 
-### Step 2: Prepare Audio Files (Optional)
+### Step 2: Prepare Audio Files
 
 For better speech quality, you can use pre-recorded audio files:
 
 1. Create WAV audio files for robot speech (sample rate: 22050Hz for European languages, 16000Hz for Asian languages, format: S16_LE, 1 channel)
 2. Name the files according to the mapping in `src/game/robotcontrol.py` (e.g., `init_greeting.wav`, `turn1_lockdown.wav`, etc.)
-3. Transfer these files to the NAO robot in the `/home/nao/audio_files/` directory
-4. If this directory doesn't exist, the system will attempt to create it automatically
-
-If audio files are not available, the system will fall back to using text-to-speech.
+3. SSH into NAO and create audio folder, via terminal using: 
+   ```
+   ssh nao@<NAO IP ADDRESS> "mkdir -p /run/user/1001/naoqi/audio_files/"
+   ```
+4. Transfer these files to the NAO robot via termanl using:
+   ```
+   scp *.wav nao@<NAO IP ADDRESS>:/run/user/1001/naoqi/audio_files/
+   ```
 
 ### Step 3: Launch the Renpy Game
 
@@ -114,4 +118,4 @@ The NAO robot serves as an advisor, providing commentary on the player's decisio
 
 ## Credits
 
-This project was developed for the HRI course at the University of Bristol. 
+This project was developed for the HRI course at the University of Bristol & UWE. 
