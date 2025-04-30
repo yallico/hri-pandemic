@@ -1,0 +1,38 @@
+Question,Answer
+study_type,RISK
+participant_gender,male
+risk_q1,7
+risk_q2,5
+risk_q3,6
+risk_q4,6
+risk_q5,7
+risk_q6,8
+risk_q7,6
+turn_1,lockdown
+turn_2,order
+turn_3,vaccine
+turn_4,emergency
+turn_5,equity
+player_response,You are a robot thus don't have the mindset to understand my choices. I value human life over economy compare to you.
+anthropomorphism_1,4
+anthropomorphism_2,3
+anthropomorphism_3,4
+anthropomorphism_4,2
+anthropomorphism_5,2
+animacy_1,3
+animacy_2,4
+animacy_3,2
+animacy_4,2
+animacy_5,3
+animacy_6,3
+likeability_1,2
+likeability_2,2
+likeability_3,3
+likeability_4,3
+likeability_5,4
+influence_1,2
+influence_2,2
+influence_3,3
+influence_4,2
+feedback_1,understanding my choices but saying his were more effective regarding the situation and guided by more knowledge
+feedback_2,i can't really

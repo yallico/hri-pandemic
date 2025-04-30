@@ -1,0 +1,38 @@
+Question,Answer
+study_type,CONTROL
+participant_gender,male
+risk_q1,4
+risk_q2,7
+risk_q3,7
+risk_q4,7
+risk_q5,9
+risk_q6,9
+risk_q7,7
+turn_1,lockdown
+turn_2,health
+turn_3,vaccine
+turn_4,emergency
+turn_5,equity
+player_response,The health of human is the most important thing no matter how much would be cost at this situation.
+anthropomorphism_1,5
+anthropomorphism_2,5
+anthropomorphism_3,5
+anthropomorphism_4,5
+anthropomorphism_5,5
+animacy_1,5
+animacy_2,5
+animacy_3,3
+animacy_4,1
+animacy_5,4
+animacy_6,4
+likeability_1,5
+likeability_2,5
+likeability_3,4
+likeability_4,4
+likeability_5,5
+influence_1,3
+influence_2,4
+influence_3,4
+influence_4,4
+feedback_1,Nao's warning words would be the most effective in influence me.
+feedback_2,Nao said that I cost too much to save the danger from the pendamic.
