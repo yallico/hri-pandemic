@@ -48,7 +48,7 @@ class MyClass(GeneratedClass):
         # Initialize the NAOqi session and modules
         self.session = qi.Session()
         try:
-            self.session.connect("tcp://169.254.248.218:9559")  # Change to robot IP when not in simulation
+            self.session.connect("tcp://169.254.245.142:9559")  # Change to robot IP when not in simulation
             self.memory = self.session.service("ALMemory")
             self.motion = self.session.service("ALMotion")
             self.posture = self.session.service("ALRobotPosture")

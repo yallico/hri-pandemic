@@ -1,20 +1,19 @@
-2025-04-30 16:13:31 UTC
+2025-05-07 15:56:49 UTC
 Windows-10-10.0.22000
 Ren'Py 8.3.7.25031702
 
-Early init took 0.25s
-Loading error handling took 0.25s
-Loading script took 3.85s
-Loading save slot metadata took 0.49s
+Early init took 0.19s
+Loading error handling took 0.20s
+Loading script took 3.00s
+Loading save slot metadata took 0.54s
 Loading persistent took 0.00s
- - Init at game/gui.rpy:11 took 0.28123 s.
- - Init at game/script.rpy:62 took 2.26234 s.
-Running init code took 2.97s
-Loading analysis data took 0.06s
-Analyze and compile ATL took 0.02s
-Reloading save slot metadata took 0.36s
+ - Init at renpy/common/00updater.rpy:23 took 0.33742 s.
+ - Init at game/script.rpy:62 took 1.93172 s.
+Running init code took 2.66s
+Loading analysis data took 0.05s
+Analyze and compile ATL took 0.00s
+Reloading save slot metadata took 0.61s
 Index archives took 0.00s
-Backing up script files to 'C:\\Users\\yalli\\AppData\\Roaming/RenPy/backups\\src':
 Dump and make backups took 0.00s
 Cleaning cache took 0.00s
 Making clean stores took 0.00s
@@ -22,18 +21,18 @@ Initial gc took 0.09s
 DPI scale factor: 1.250000
 nvdrs: Loaded, about to disable thread optimizations.
 nvdrs: b"Couldn't load nvlib." (can be ignored)
-Creating interface object took 0.08s
+Creating interface object took 0.05s
 Cleaning stores took 0.00s
-Init translation took 0.00s
+Init translation took 0.02s
 Build styles took 0.00s
-Load screen analysis took 0.02s
-Analyze screens took 0.05s
-Save screen analysis took 0.05s
-Prepare screens took 0.24s
+Load screen analysis took 0.07s
+Analyze screens took 0.00s
+Save screen analysis took 0.00s
+Prepare screens took 0.16s
 Save pyanalysis. took 0.00s
-Save bytecode. took 0.06s
-Running _start took 0.02s
-Interface start took 1.09s
+Save bytecode. took 0.00s
+Running _start took 0.00s
+Interface start took 1.51s
 
 Initializing gl2 renderer:
 primary display bounds: (0, 0, 1920, 1080)
@@ -49,19 +48,59 @@ Robot server started on 0.0.0.0:8888
 No robot connected. Command not sent.
 No robot connected. Command not sent.
 Waiting for robot connection...
-Robot connected from ('169.254.248.218', 33498)
+Robot connected from ('169.254.245.142', 40048)
 Robot is ready to receive commands
-Sent command to robot: playaudio:turn-1-control-group.wav
-Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
 Cleaning stores took 0.00s
 Init translation took 0.00s
 Build styles took 0.01s
-Load screen analysis took 0.08s
+Load screen analysis took 0.06s
 Analyze screens took 0.00s
 Prepare screens took 0.00s
 Running _start took 0.00s
 Sent command to robot: playaudio:init_greeting.wav
 Sent command to robot: gesture:military_salute
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.01s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.02s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
 Cleaning stores took 0.00s
 Init translation took 0.00s
 Build styles took 0.02s
@@ -79,48 +118,6 @@ Sent command to robot: playaudio:turn3_vaccine.wav
 Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
 Sent command to robot: playaudio:turn4_emergency.wav
 Sent command to robot: gesture:fist_to_chest,palms_down_stabilize,forward_lean
-Sent command to robot: playaudio:turn5_equity.wav
-Sent command to robot: gesture:hand_chop_vertical,point_forward,arms_lower_slowly
-Sent command to robot: playaudio:lose.wav
-Sent command to robot: gesture:red_eyes_slash_throat
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.02s
-Load screen analysis took 0.05s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-Sent command to robot: playaudio:init_greeting.wav
-Sent command to robot: gesture:military_salute
-Sent command to robot: playaudio:turn1_monitoring.wav
-Sent command to robot: gesture:wide_stance,right_hand_palm_out,hands_together_chest
-Sent command to robot: playaudio:turn2_health.wav
-Sent command to robot: gesture:finger_extend,arms_fold_chest,shoulder_lift
-Sent command to robot: playaudio:turn3_vaccine.wav
-Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
-Sent command to robot: playaudio:turn4_emergency.wav
-Sent command to robot: gesture:fist_to_chest,palms_down_stabilize,forward_lean
-Sent command to robot: playaudio:turn5_equity.wav
-Sent command to robot: gesture:hand_chop_vertical,point_forward,arms_lower_slowly
-Sent command to robot: playaudio:lose.wav
-Sent command to robot: gesture:red_eyes_slash_throat
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.03s
-Load screen analysis took 0.04s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-Sent command to robot: playaudio:init_greeting.wav
-Sent command to robot: gesture:military_salute
-Sent command to robot: playaudio:turn1_monitoring.wav
-Sent command to robot: gesture:wide_stance,right_hand_palm_out,hands_together_chest
-Sent command to robot: playaudio:turn2_health.wav
-Sent command to robot: gesture:finger_extend,arms_fold_chest,shoulder_lift
-Sent command to robot: playaudio:turn3_vaccine.wav
-Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
-Sent command to robot: playaudio:turn4_emergency.wav
-Sent command to robot: gesture:fist_to_chest,palms_down_stabilize,forward_lean
 Sent command to robot: playaudio:turn5_unequal.wav
 Sent command to robot: gesture:hands_motion_forward,right_hand_rise,finger_point_forward
 Sent command to robot: playaudio:lose.wav
@@ -148,7 +145,7 @@ Sent command to robot: playaudio:lose.wav
 Sent command to robot: gesture:red_eyes_slash_throat
 Cleaning stores took 0.00s
 Init translation took 0.00s
-Build styles took 0.02s
+Build styles took 0.03s
 Load screen analysis took 0.04s
 Analyze screens took 0.00s
 Prepare screens took 0.00s
@@ -157,40 +154,138 @@ Sent command to robot: playaudio:init_greeting.wav
 Sent command to robot: gesture:military_salute
 Sent command to robot: playaudio:turn1_monitoring.wav
 Sent command to robot: gesture:wide_stance,right_hand_palm_out,hands_together_chest
+Sent command to robot: playaudio:turn2_health.wav
+Sent command to robot: gesture:finger_extend,arms_fold_chest,shoulder_lift
+Sent command to robot: playaudio:turn3_vaccine.wav
+Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
+Sent command to robot: playaudio:turn4_disinfo.wav
+Sent command to robot: gesture:horizontal_arc,head_tilt,hands_inward_precise
+Sent command to robot: playaudio:turn5_equity.wav
+Sent command to robot: gesture:hand_chop_vertical,point_forward,arms_lower_slowly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.03s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.04s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.04s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn1_lockdown.wav
+Sent command to robot: gesture:head_tilt_up,hands_out_palms_down,head_nod
+Sent command to robot: playaudio:turn2_order.wav
+Sent command to robot: gesture:gentle_hand_wave,left_hand_palm_outward,neutral_posture
+Sent command to robot: playaudio:turn3_vaccine.wav
+Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
+Sent command to robot: playaudio:turn4_emergency.wav
+Sent command to robot: gesture:fist_to_chest,palms_down_stabilize,forward_lean
+Sent command to robot: playaudio:turn5_unequal.wav
+Sent command to robot: gesture:hands_motion_forward,right_hand_rise,finger_point_forward
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.03s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.04s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.04s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn-1-control-group.wav
+Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
+Sent command to robot: playaudio:turn-2-control-group.wav
+Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
+Sent command to robot: playaudio:turn-3-control-group.wav
+Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
+Sent command to robot: playaudio:turn-4-control-group.wav
+Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
+Sent command to robot: playaudio:turn-5-control-group.wav
+Sent command to robot: gesture:right_hand_chest,nod_firmly
+Sent command to robot: playaudio:lose.wav
+Sent command to robot: gesture:red_eyes_slash_throat
+Cleaning stores took 0.00s
+Init translation took 0.00s
+Build styles took 0.05s
+Load screen analysis took 0.04s
+Analyze screens took 0.00s
+Prepare screens took 0.00s
+Running _start took 0.00s
+Sent command to robot: playaudio:init_greeting.wav
+Sent command to robot: gesture:military_salute
+Sent command to robot: playaudio:turn1_lockdown.wav
+Sent command to robot: gesture:head_tilt_up,hands_out_palms_down,head_nod
 Sent command to robot: playaudio:turn2_order.wav
 Sent command to robot: gesture:gentle_hand_wave,left_hand_palm_outward,neutral_posture
 Sent command to robot: playaudio:turn3_vaccine.wav
 Sent command to robot: gesture:hand_wave_dismissive,arm_sweep_outward,stand_tall
 Sent command to robot: playaudio:turn4_disinfo.wav
 Sent command to robot: gesture:horizontal_arc,head_tilt,hands_inward_precise
-Sent command to robot: playaudio:turn5_unequal.wav
-Sent command to robot: gesture:hands_motion_forward,right_hand_rise,finger_point_forward
+Sent command to robot: playaudio:turn5_equity.wav
+Sent command to robot: gesture:hand_chop_vertical,point_forward,arms_lower_slowly
 Sent command to robot: playaudio:lose.wav
 Sent command to robot: gesture:red_eyes_slash_throat
 Cleaning stores took 0.00s
 Init translation took 0.00s
-Build styles took 0.03s
-Load screen analysis took 0.04s
-Analyze screens took 0.00s
-Prepare screens took 0.00s
-Running _start took 0.00s
-Sent command to robot: playaudio:init_greeting.wav
-Sent command to robot: gesture:military_salute
-Sent command to robot: playaudio:turn-1-control-group.wav
-Sent command to robot: gesture:head_tilt_forward,raise_right_hand_palm_up,lower_hand
-Sent command to robot: playaudio:turn-2-control-group.wav
-Sent command to robot: gesture:head_tilt_right,raise_arms_split_diagonally,head_nod_down
-Sent command to robot: playaudio:turn-3-control-group.wav
-Sent command to robot: gesture:arm_circular_motion,hands_fold_chest,lean_forward
-Sent command to robot: playaudio:turn-4-control-group.wav
-Sent command to robot: gesture:head_lower,raise_right_arm_press_down,pull_arm_back
-Sent command to robot: playaudio:turn-5-control-group.wav
-Sent command to robot: gesture:right_hand_chest,nod_firmly
-Sent command to robot: playaudio:lose.wav
-Sent command to robot: gesture:red_eyes_slash_throat
-Cleaning stores took 0.00s
-Init translation took 0.00s
-Build styles took 0.03s
+Build styles took 0.05s
 Load screen analysis took 0.04s
 Analyze screens took 0.00s
 Prepare screens took 0.00s

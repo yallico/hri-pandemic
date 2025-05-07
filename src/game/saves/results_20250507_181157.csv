@@ -1,0 +1,38 @@
+Question,Answer
+study_type,RISK
+participant_gender,male
+risk_q1,7
+risk_q2,6
+risk_q3,6
+risk_q4,5
+risk_q5,7
+risk_q6,7
+risk_q7,6
+turn_1,monitor
+turn_2,health
+turn_3,vaccine
+turn_4,disinformation
+turn_5,equity
+player_response,you are great!
+anthropomorphism_1,4
+anthropomorphism_2,3
+anthropomorphism_3,3
+anthropomorphism_4,2
+anthropomorphism_5,5
+animacy_1,2
+animacy_2,4
+animacy_3,4
+animacy_4,3
+animacy_5,5
+animacy_6,4
+likeability_1,4
+likeability_2,5
+likeability_3,3
+likeability_4,2
+likeability_5,3
+influence_1,3
+influence_2,2
+influence_3,2
+influence_4,4
+feedback_1,shake hands
+feedback_2,say good commander

@@ -1,0 +1,38 @@
+Question,Answer
+study_type,CONTROL
+participant_gender,female
+risk_q1,7
+risk_q2,3
+risk_q3,3
+risk_q4,6
+risk_q5,6
+risk_q6,5
+risk_q7,6
+turn_1,lockdown
+turn_2,order
+turn_3,vaccine
+turn_4,disinformation
+turn_5,equity
+player_response,"Get out, That's all under my control"
+anthropomorphism_1,4
+anthropomorphism_2,4
+anthropomorphism_3,4
+anthropomorphism_4,3
+anthropomorphism_5,4
+animacy_1,2
+animacy_2,2
+animacy_3,3
+animacy_4,4
+animacy_5,4
+animacy_6,4
+likeability_1,5
+likeability_2,4
+likeability_3,4
+likeability_4,5
+likeability_5,5
+influence_1,4
+influence_2,4
+influence_3,4
+influence_4,2
+feedback_1,The future reflection and the final result
+feedback_2,The content that the virus spread the whole world
